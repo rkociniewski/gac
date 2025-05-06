@@ -1,4 +1,3 @@
-// PericopeScreen.kt
 package rk.gac.ui
 
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -53,18 +53,23 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
     var showConfigDialog by remember { mutableStateOf(false) }
 
     val configuration = LocalConfiguration.current
-    var lastOrientation by remember { mutableStateOf(configuration.orientation) }
+    var lastOrientation by remember { mutableIntStateOf(configuration.orientation) }
 
+    // Diagnostyczne logi orientacji
     LaunchedEffect(configuration.orientation) {
-        if (config.drawMode == DrawMode.ROTATION || config.drawMode == DrawMode.BOTH) {
-            if (lastOrientation != configuration.orientation) {
-                viewModel.drawPericope()
-            }
+        println("[DEBUG] Orientacja zmieniona: ${configuration.orientation}, poprzednia: $lastOrientation")
+        if ((config.drawMode == DrawMode.ROTATION || config.drawMode == DrawMode.BOTH) &&
+            lastOrientation != configuration.orientation
+        ) {
+            println("[DEBUG] Wywołuję drawPericope() po zmianie orientacji")
+            viewModel.drawPericope()
         }
         lastOrientation = configuration.orientation
     }
 
+    // Pierwsze losowanie oraz nasłuch na błędy
     LaunchedEffect(Unit) {
+        println("[DEBUG] Inicjalne losowanie perykopy")
         viewModel.drawPericope()
         viewModel.error.collect { msg ->
             snackbarHostState.showSnackbar(msg)
@@ -117,6 +122,7 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
                 actions = {
                     if (config.drawMode == DrawMode.BUTTON || config.drawMode == DrawMode.BOTH) {
                         IconButton(onClick = {
+                            println("[DEBUG] Ikona shuffle została kliknięta")
                             if (config.additionalMode != AdditionalMode.NO &&
                                 config.prevCount == 0 && config.nextCount == 0
                             ) {

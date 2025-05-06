@@ -25,6 +25,8 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
     private val _pericopes = MutableStateFlow<List<Pericope>>(emptyList())
     val pericopes: StateFlow<List<Pericope>> = _pericopes
 
+    private val allPericopes = mutableListOf<Pericope>()
+
     var selectedIndex = 0
         private set
 
@@ -45,15 +47,18 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
         }
         viewModelScope.launch {
             val list = loadPericopesFromRaw(context)
-            _pericopes.value = list
+            allPericopes.clear()
+            allPericopes.addAll(list)
+            drawPericope()
         }
     }
 
     fun drawPericope() {
-        val all = _pericopes.value
+        val all = allPericopes
         if (all.isEmpty()) return
 
         val selected = all.random()
+        println("[DEBUG] Wylosowana perykopa: ${selected.id}")
         val index = all.indexOf(selected)
         val config = _config.value
 
