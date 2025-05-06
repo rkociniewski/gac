@@ -10,7 +10,7 @@ data class Config(
     val prevCount: Int = 0,                           // how many pericopes before drawn
     val nextCount: Int = 1,                           // how many pericopes after drawn
     val startFallback: Int = 1,                       // if begin of Gospel
-    val endFallback: Int = 1                          // if end of Evangelion 残酷な天使のように
+    val endFallback: Int = 1,                         // if end of Evangelion 残酷な天使のように
     val displayMode: DisplayMode = DisplayMode.LIGHT, // DisplayMode for Dark Mode
     val drawMode: DrawMode = DrawMode.ROTATION
 ) {

@@ -2,9 +2,9 @@ package rk.gac.data
 
 import android.content.Context
 import kotlinx.serialization.json.Json
-import rk.gac.model.Config
 import rk.gac.R
 import rk.gac.enums.AdditionalMode
+import rk.gac.model.Config
 import rk.gac.model.Pericope
 import java.io.InputStream
 
@@ -44,7 +44,10 @@ class PericopeProvider(private val context: Context) {
         val prev = if (hasPrev && config.prevCount > 0) {
             allPericopes.subList((index - config.prevCount).coerceAtLeast(0), index)
         } else if (!hasPrev) {
-            allPericopes.subList(index + 1, (index + 1 + config.startFallback).coerceAtMost(totalSize))
+            allPericopes.subList(
+                index + 1,
+                (index + 1 + config.startFallback).coerceAtMost(totalSize)
+            )
         } else {
             emptyList()
         }
