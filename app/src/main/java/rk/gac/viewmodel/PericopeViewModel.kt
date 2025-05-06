@@ -73,12 +73,12 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
 
         // handle fallback if too close to start/end
         val adjustedSelection = when {
-            selection.firstIndex(index) == 0 -> {
+            firstIndex(index) == 0 -> {
                 val extra = config.startFallback
                 all.subList(0, minOf(all.size, selection.size + extra))
             }
 
-            selection.lastIndex(index) == all.lastIndex -> {
+            lastIndex(index) == all.lastIndex -> {
                 val extra = config.endFallback
                 val start = maxOf(0, all.size - selection.size - extra)
                 all.subList(start, all.size)
@@ -99,6 +99,6 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     // Extensions for clarity
-    private fun List<Pericope>.firstIndex(ref: Int) = ref
-    private fun List<Pericope>.lastIndex(ref: Int) = ref
+    private fun firstIndex(ref: Int) = ref
+    private fun lastIndex(ref: Int) = ref
 }
