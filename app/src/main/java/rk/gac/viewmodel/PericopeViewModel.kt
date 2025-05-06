@@ -1,4 +1,4 @@
-package rk.gac.viewModel
+package rk.gac.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

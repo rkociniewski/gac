@@ -3,7 +3,9 @@ package rk.gac.ui.config
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
@@ -29,7 +31,8 @@ import rk.gac.model.Config
 fun ConfigSection(
     initialConfig: Config,
     onConfigChange: (Config) -> Unit,
-    onDraw: () -> Unit
+    onDraw: () -> Unit,
+    showSaveOnly: Boolean = false
 ) {
     var mode by remember { mutableStateOf(initialConfig.additionalMode) }
     var wordThreshold by remember { mutableIntStateOf(initialConfig.wordThreshold) }
@@ -41,11 +44,11 @@ fun ConfigSection(
     var drawMode by remember { mutableStateOf(initialConfig.drawMode) }
 
     // Tryb dodatkowych perykop
-    SectionTitle("Tryb dodatkowych perykop")
+    Text("Tryb dodatkowych perykop", style = MaterialTheme.typography.titleMedium)
     ModeSelector(AdditionalMode.entries.toTypedArray(), mode) { mode = it }
 
     if (mode == AdditionalMode.CONDITIONAL) {
-        SectionTitle("Próg słów")
+        Text("Próg słów", style = MaterialTheme.typography.bodyLarge)
         WordThresholdSelector(wordThreshold) { wordThreshold = it }
     }
 
@@ -58,11 +61,15 @@ fun ConfigSection(
 
     HorizontalDivider()
 
-    SectionTitle("Tryb wyświetlania")
+    // Tryb wyświetlania
+    Text("Tryb wyświetlania", style = MaterialTheme.typography.titleMedium)
     ModeSelector(DisplayMode.entries.toTypedArray(), displayMode) { displayMode = it }
 
-    SectionTitle("Tryb losowania")
+    // Tryb losowania
+    Text("Tryb losowania", style = MaterialTheme.typography.titleMedium)
     ModeSelector(DrawMode.entries.toTypedArray(), drawMode) { drawMode = it }
+
+    Spacer(modifier = Modifier.height(8.dp))
 
     Button(
         onClick = {
@@ -78,16 +85,17 @@ fun ConfigSection(
                     drawMode = drawMode
                 )
             )
-            onDraw()
+            if (!showSaveOnly) onDraw()
         },
         modifier = Modifier
-            .padding(top = 8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(top = 8.dp),
         enabled = !(mode != AdditionalMode.NO && prev == 0 && next == 0)
     ) {
-        Text("Wylosuj perykopę")
+        Text(if (showSaveOnly) "Zapisz zmiany" else "Wylosuj perykopę")
     }
 }
+
 
 @Composable
 fun SectionTitle(text: String) {

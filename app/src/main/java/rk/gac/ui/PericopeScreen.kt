@@ -1,45 +1,25 @@
 // PericopeScreen.kt
 package rk.gac.ui
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Shuffle
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
+import rk.gac.viewmodel.PericopeViewModel
+import rk.gac.model.Config
 import rk.gac.enums.DrawMode
 import rk.gac.ui.config.ConfigSection
-import rk.gac.viewModel.PericopeViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PericopeScreen(viewModel: PericopeViewModel) {
     val config by viewModel.config.collectAsState()
@@ -65,6 +45,7 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
         viewModel.error.collect { msg ->
             snackbarHostState.showSnackbar(msg)
         }
+        viewModel.drawPericope() // draw initial pericope on launch
     }
 
     if (showConfigDialog) {
@@ -79,7 +60,8 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
                 Column(
                     modifier = Modifier
                         .padding(16.dp)
-                        .verticalScroll(rememberScrollState())
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     ConfigSection(
                         initialConfig = config,
@@ -87,8 +69,18 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
                             viewModel.updateConfig(it)
                             showConfigDialog = false
                         },
-                        onDraw = { viewModel.drawPericope() }
+                        onDraw = {}, // no draw on save config
+                        showSaveOnly = true // flag to change button label and logic
                     )
+                    if (config.additionalMode != rk.gac.enums.AdditionalMode.NO &&
+                        config.prevCount == 0 && config.nextCount == 0
+                    ) {
+                        Text(
+                            text = "Ustaw co najmniej 1 perykopę przed lub po.",
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 }
             }
         }
@@ -101,7 +93,20 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
                 title = { Text("Gosple A Caso") },
                 actions = {
                     if (config.drawMode == DrawMode.BUTTON || config.drawMode == DrawMode.BOTH) {
-                        IconButton(onClick = { viewModel.drawPericope() }) {
+                        IconButton(
+                            onClick = {
+                                if (config.additionalMode != rk.gac.enums.AdditionalMode.NO &&
+                                    config.prevCount == 0 && config.nextCount == 0
+                                ) {
+                                    // show snackbar warning
+                                    LaunchedEffect(Unit) {
+                                        snackbarHostState.showSnackbar("Nie można losować: ustaw 1+ perykopę przed lub po.")
+                                    }
+                                } else {
+                                    viewModel.drawPericope()
+                                }
+                            }
+                        ) {
                             Icon(Icons.Outlined.Shuffle, contentDescription = "Losuj")
                         }
                     }

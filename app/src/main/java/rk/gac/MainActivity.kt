@@ -11,7 +11,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import rk.gac.enums.DisplayMode
 import rk.gac.ui.PericopeScreen
 import rk.gac.ui.theme.GospelACasoTheme
-import rk.gac.viewModel.PericopeViewModel
+import rk.gac.viewmodel.PericopeViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
