@@ -25,7 +25,7 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
     private val _pericopes = MutableStateFlow<List<Pericope>>(emptyList())
     val pericopes: StateFlow<List<Pericope>> = _pericopes
 
-    private val allPericopes = mutableListOf<Pericope>()
+    internal val allPericopes = mutableListOf<Pericope>()
 
     var selectedIndex = 0
         private set
@@ -37,6 +37,9 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
         val jsonString = inputStream.bufferedReader().use { it.readText() }
         return Json.decodeFromString<List<Pericope>>(jsonString)
     }
+
+    private fun isSameGospel(p: Pericope?, gp: String): Boolean =
+        p?.id?.startsWith("${gp}_") ?: false
 
     init {
         viewModelScope.launch {
@@ -53,47 +56,62 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun drawPericope() {
-        val all = allPericopes
-        if (all.isEmpty()) return
+    fun drawPericope(forcedIndex: Int? = null) {
+        if (allPericopes.isEmpty()) return
 
-        val selected = all.random()
-        println("[DEBUG] Wylosowana perykopa: ${selected.id}")
-        val index = all.indexOf(selected)
+        val selected = forcedIndex ?: allPericopes.indices.random()
+        val selectedPericope = allPericopes[selected]
+        selectedIndex = 0 // will be recalculated below
+
+        println("[DEBUG] Wylosowana perykopa: ${selectedPericope.id}")
+
         val config = _config.value
+        val result = mutableListOf<Pericope>()
 
-        val startIndex = maxOf(0, index - config.prevCount)
-        val endIndex = minOf(all.lastIndex, index + config.nextCount)
+        // Determine the gospel prefix, e.g. "mt", "mk"
+        val gospelPrefix = selectedPericope.id.takeWhile { it != '_' }
 
-        val selection = when (config.additionalMode) {
-            AdditionalMode.NO -> listOf(selected)
-            AdditionalMode.YES -> all.subList(startIndex, endIndex + 1)
-            AdditionalMode.CONDITIONAL -> {
-                val wordCount = selected.text.split(" ").size
-                if (wordCount < config.wordThreshold) {
-                    all.subList(startIndex, endIndex + 1)
-                } else listOf(selected)
-            }
+        // Determine if this is the first pericope of the gospel
+        val isAtStart =
+            selected == 0 || !isSameGospel(allPericopes.getOrNull(selected - 1), gospelPrefix)
+
+        // Determine if this is the last pericope of the gospel
+        val isAtEnd = selected == allPericopes.lastIndex || !isSameGospel(
+            allPericopes.getOrNull(selected + 1),
+            gospelPrefix
+        )
+
+        val thresholdMet = selectedPericope.text.trim().split("\\s+").size <= config.wordThreshold
+
+        val useAdditional = when (config.additionalMode) {
+            AdditionalMode.YES -> true
+            AdditionalMode.NO -> false
+            AdditionalMode.CONDITIONAL -> thresholdMet
         }
 
-        // handle fallback if too close to start/end
-        val adjustedSelection = when {
-            firstIndex(index) == 0 -> {
-                val extra = config.startFallback
-                all.subList(0, minOf(all.size, selection.size + extra))
-            }
-
-            lastIndex(index) == all.lastIndex -> {
-                val extra = config.endFallback
-                val start = maxOf(0, all.size - selection.size - extra)
-                all.subList(start, all.size)
-            }
-
-            else -> selection
+        val prevCount = when {
+            useAdditional && isAtEnd -> config.endFallback
+            useAdditional && isAtStart -> 0
+            useAdditional -> config.prevCount
+            else -> 0
         }
 
-        _pericopes.value = adjustedSelection
-        selectedIndex = adjustedSelection.indexOf(selected)
+        val nextCount = when {
+            useAdditional && isAtStart -> config.startFallback
+            useAdditional && isAtEnd -> 0
+            useAdditional -> config.nextCount
+            else -> 0
+        }
+
+        val from = (selected - prevCount).coerceAtLeast(0)
+        val to = (selected + nextCount).coerceAtMost(allPericopes.lastIndex)
+
+        for (i in from..to) {
+            result.add(allPericopes[i])
+        }
+
+        selectedIndex = result.indexOfFirst { it.id == selectedPericope.id }
+        _pericopes.value = result
     }
 
     fun updateConfig(newConfig: Config) {
@@ -102,8 +120,4 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
             ConfigStore.write(context, newConfig)
         }
     }
-
-    // Extensions for clarity
-    private fun firstIndex(ref: Int) = ref
-    private fun lastIndex(ref: Int) = ref
 }
