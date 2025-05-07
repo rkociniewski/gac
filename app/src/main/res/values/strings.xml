@@ -12,7 +12,7 @@
     <string name="draw_mode_both">Oba</string>
     <string name="display_mode_light">Jasny</string>
     <string name="display_mode_dark">Ciemny</string>
-    <string name="display_mode_system">Systemowy</string>
+    <string name="display_mode_system">System</string>
     <string name="additional_mode_yes">Tak</string>
     <string name="additional_mode_no">Nie</string>
     <string name="additional_mode_conditional">Warunkowo</string>
