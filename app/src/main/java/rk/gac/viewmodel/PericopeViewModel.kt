@@ -2,6 +2,7 @@ package rk.gac.viewmodel
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -63,7 +64,10 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
         val selectedPericope = allPericopes[selected]
         selectedIndex = 0 // will be recalculated below
 
-        println("[DEBUG] Wylosowana perykopa: ${selectedPericope.id}")
+        Log.d(
+            "rk.gac",
+            "[DEBUG] ${context.getString(R.string.debug_drawn_pericope, selectedPericope.id)}"
+        )
 
         val config = _config.value
         val result = mutableListOf<Pericope>()

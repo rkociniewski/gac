@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Pericope(
-    val id: String,           // np. "mt_1.1-17"
-    val reference: String,    // np. "Mt 1,1–17"
-    val title: String,        // np. "Rodowód Jezusa"
-    val text: String          // pełny tekst (pojedynczy akapit)
+    val id: String,           // e.g. "mt_1.1-17"
+    val reference: String,    // e.g. "Mt 1,1–17"
+    val title: String,        // e.g. "Rodowód Jezusa"
+    val text: String          // full text of Gospel
 )

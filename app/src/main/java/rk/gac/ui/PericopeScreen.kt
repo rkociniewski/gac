@@ -1,5 +1,6 @@
 package rk.gac.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -33,10 +34,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.launch
+import rk.gac.R
 import rk.gac.enums.AdditionalMode
 import rk.gac.enums.DrawMode
 import rk.gac.ui.config.ConfigSection
@@ -45,6 +49,7 @@ import rk.gac.viewmodel.PericopeViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PericopeScreen(viewModel: PericopeViewModel) {
+    val context = LocalContext.current
     val config by viewModel.config.collectAsState()
     val pericopes by viewModel.pericopes.collectAsState()
     val selectedIndex = viewModel.selectedIndex
@@ -55,27 +60,40 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
     val configuration = LocalConfiguration.current
     var lastOrientation by remember { mutableIntStateOf(configuration.orientation) }
 
-    // Diagnostyczne logi orientacji
+    // Handle orientation change
     LaunchedEffect(configuration.orientation) {
-        println("[DEBUG] Orientacja zmieniona: ${configuration.orientation}, poprzednia: $lastOrientation")
+        Log.d(
+            "rk.gac",
+            "[DEBUG] ${
+                context.getString(
+                    R.string.debug_drawn_changed_orientation,
+                    configuration.orientation,
+                    lastOrientation
+                )
+            }"
+        )
         if ((config.drawMode == DrawMode.ROTATION || config.drawMode == DrawMode.BOTH) &&
             lastOrientation != configuration.orientation
         ) {
-            println("[DEBUG] Wywołuję drawPericope() po zmianie orientacji")
+            Log.d(
+                "rk.gac",
+                "[DEBUG] ${context.getString(R.string.debug_drawn_pericope_orientation)}"
+            )
             viewModel.drawPericope()
         }
         lastOrientation = configuration.orientation
     }
 
-    // Pierwsze losowanie oraz nasłuch na błędy
+    // Initial draw and error handling
     LaunchedEffect(Unit) {
-        println("[DEBUG] Inicjalne losowanie perykopy")
+        Log.d("rk.gac", "[DEBUG] ${context.getString(R.string.debug_initial_drawn_pericope)}")
         viewModel.drawPericope()
         viewModel.error.collect { msg ->
             snackbarHostState.showSnackbar(msg)
         }
     }
 
+    // Configuration modal dialog
     if (showConfigDialog) {
         Dialog(onDismissRequest = { showConfigDialog = false }) {
             Surface(
@@ -97,14 +115,12 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
                             viewModel.updateConfig(it)
                             showConfigDialog = false
                         },
-                        onDraw = {},
-                        showSaveOnly = true
                     )
                     if (config.additionalMode != AdditionalMode.NO &&
                         config.prevCount == 0 && config.nextCount == 0
                     ) {
                         Text(
-                            text = "Ustaw co najmniej 1 perykopę przed lub po.",
+                            text = stringResource(R.string.error_no_additional),
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodyMedium
                         )
@@ -118,26 +134,41 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Gosple A Caso") },
+                title = { Text(stringResource(R.string.app_name)) },
                 actions = {
                     if (config.drawMode == DrawMode.BUTTON || config.drawMode == DrawMode.BOTH) {
                         IconButton(onClick = {
-                            println("[DEBUG] Ikona shuffle została kliknięta")
+                            Log.d(
+                                "rk.gac",
+                                "[DEBUG] ${context.getString(R.string.debug_shuffle_clicked)}"
+                            )
                             if (config.additionalMode != AdditionalMode.NO &&
                                 config.prevCount == 0 && config.nextCount == 0
                             ) {
                                 scope.launch {
-                                    snackbarHostState.showSnackbar("Nie można losować: ustaw 1+ perykopę przed lub po.")
+                                    snackbarHostState.showSnackbar(
+                                        "${context.getString(R.string.debug_cant_drawn)}: ${
+                                            context.getString(
+                                                R.string.error_no_additional
+                                            )
+                                        }"
+                                    )
                                 }
                             } else {
                                 viewModel.drawPericope()
                             }
                         }) {
-                            Icon(Icons.Outlined.Shuffle, contentDescription = "Losuj")
+                            Icon(
+                                Icons.Outlined.Shuffle,
+                                contentDescription = stringResource(R.string.draw)
+                            )
                         }
                     }
                     IconButton(onClick = { showConfigDialog = true }) {
-                        Icon(Icons.Outlined.Settings, contentDescription = "Ustawienia")
+                        Icon(
+                            Icons.Outlined.Settings,
+                            contentDescription = stringResource(R.string.settings)
+                        )
                     }
                 }
             )

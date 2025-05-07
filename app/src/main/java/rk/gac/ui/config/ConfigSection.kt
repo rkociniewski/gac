@@ -21,7 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import rk.gac.R
 import rk.gac.enums.AdditionalMode
 import rk.gac.enums.DisplayMode
 import rk.gac.enums.DrawMode
@@ -31,8 +33,6 @@ import rk.gac.model.Config
 fun ConfigSection(
     initialConfig: Config,
     onConfigChange: (Config) -> Unit,
-    onDraw: () -> Unit,
-    showSaveOnly: Boolean = false
 ) {
     var mode by remember { mutableStateOf(initialConfig.additionalMode) }
     var wordThreshold by remember { mutableIntStateOf(initialConfig.wordThreshold) }
@@ -43,30 +43,41 @@ fun ConfigSection(
     var displayMode by remember { mutableStateOf(initialConfig.displayMode) }
     var drawMode by remember { mutableStateOf(initialConfig.drawMode) }
 
-    // Tryb dodatkowych perykop
-    Text("Tryb dodatkowych perykop", style = MaterialTheme.typography.titleMedium)
+    // Additional mode pericopes
+    Text(
+        stringResource(R.string.section_additional_mode),
+        style = MaterialTheme.typography.titleMedium
+    )
     ModeSelector(AdditionalMode.entries.toTypedArray(), mode) { mode = it }
 
     if (mode == AdditionalMode.CONDITIONAL) {
-        Text("Próg słów", style = MaterialTheme.typography.bodyLarge)
+        Text(
+            stringResource(R.string.label_word_threshold),
+            style = MaterialTheme.typography.bodyLarge
+        )
         WordThresholdSelector(wordThreshold) { wordThreshold = it }
     }
 
     if (mode != AdditionalMode.NO) {
-        ConfigSlider("Poprzednie perykopy", prev) { prev = it }
-        ConfigSlider("Następne perykopy", next) { next = it }
-        ConfigSlider("Fallback na początku", startFallback) { startFallback = it }
-        ConfigSlider("Fallback na końcu", endFallback) { endFallback = it }
+        ConfigSlider(stringResource(R.string.label_prev), prev) { prev = it }
+        ConfigSlider(stringResource(R.string.label_next), next) { next = it }
+        ConfigSlider(stringResource(R.string.label_start_fallback), startFallback) {
+            startFallback = it
+        }
+        ConfigSlider(stringResource(R.string.label_end_fallback), endFallback) { endFallback = it }
     }
 
     HorizontalDivider()
 
-    // Tryb wyświetlania
-    Text("Tryb wyświetlania", style = MaterialTheme.typography.titleMedium)
+    // Dark mode display mode
+    Text(
+        stringResource(R.string.section_display_mode),
+        style = MaterialTheme.typography.titleMedium
+    )
     ModeSelector(DisplayMode.entries.toTypedArray(), displayMode) { displayMode = it }
 
-    // Tryb losowania
-    Text("Tryb losowania", style = MaterialTheme.typography.titleMedium)
+    // Drawn mode
+    Text(stringResource(R.string.section_draw_mode), style = MaterialTheme.typography.titleMedium)
     ModeSelector(DrawMode.entries.toTypedArray(), drawMode) { drawMode = it }
 
     Spacer(modifier = Modifier.height(8.dp))
@@ -85,21 +96,14 @@ fun ConfigSection(
                     drawMode = drawMode
                 )
             )
-            if (!showSaveOnly) onDraw()
         },
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp),
         enabled = !(mode != AdditionalMode.NO && prev == 0 && next == 0)
     ) {
-        Text(if (showSaveOnly) "Zapisz zmiany" else "Wylosuj perykopę")
+        Text(stringResource(R.string.save_button))
     }
-}
-
-
-@Composable
-fun SectionTitle(text: String) {
-    Text(text, style = MaterialTheme.typography.titleMedium)
 }
 
 @Composable

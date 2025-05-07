@@ -1,7 +1,10 @@
 package rk.gac.viewmodel
 
 import android.app.Application
+import android.util.Log
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -18,6 +21,11 @@ class PericopeViewModelTest {
 
     @Before
     fun setup() {
+
+        mockkStatic(Log::class)
+        every { Log.d(any(), any()) } returns 0
+        every { Log.d(any(), any(), any()) } returns 0
+
         vm = PericopeViewModel(mockApp).apply {
             allPericopes.clear()
             allPericopes.addAll(
@@ -73,8 +81,6 @@ class PericopeViewModelTest {
         )
         vm.drawPericope(1)
 
-        println(vm.pericopes.value.map { it.id })
-
         assertEquals(3, vm.pericopes.value.size)
     }
 
@@ -88,8 +94,6 @@ class PericopeViewModelTest {
 
         vm.drawPericope(forcedIndex = 0)
 
-        println(vm.pericopes.value.map { it.id })
-
         assertEquals(2, vm.pericopes.value.size)
     }
 
@@ -102,8 +106,6 @@ class PericopeViewModelTest {
         )
 
         vm.drawPericope(vm.allPericopes.lastIndex)
-
-        println(vm.pericopes.value.map { it.id })
 
         // fallback na końcu = 1, ale brak sąsiednich perykop, więc tylko jedna
         assertEquals(2, vm.pericopes.value.size)

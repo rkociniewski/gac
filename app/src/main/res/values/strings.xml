@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Gospel A Caso</string>
+    <string name="draw">Losuj</string>
+    <string name="draw_button">Wylosuj perykopę</string>
+    <string name="save_button">Zapisz zmiany</string>
+    <string name="error_no_additional">Ustaw co najmniej 1 perykopę przed lub po.</string>
+    <string name="settings">Ustawienia</string>
+    <string name="section_additional_mode">Tryb dodatkowych perykop</string>
+    <string name="section_display_mode">Tryb wyświetlania</string>
+    <string name="section_draw_mode">Tryb losowania</string>
+    <string name="label_word_threshold">Próg słów</string>
+    <string name="label_prev">Poprzednie perykopy</string>
+    <string name="label_next">Następne perykopy</string>
+    <string name="label_start_fallback">Fallback na początku</string>
+    <string name="label_end_fallback">Fallback na końcu</string>
+    <string name="debug_cant_drawn">Nie można losować:</string>
+    <string name="debug_shuffle_clicked">Ikona shuffle została kliknięta</string>
+    <string name="debug_drawn_pericope">Wylosowana perykopa: %1$s</string>
+    <string name="debug_initial_drawn_pericope">Inicjalne losowanie perykopy</string>
+    <string name="debug_drawn_pericope_orientation">Wywołuję drawPericope() po zmianie orientacji</string>
+    <string name="debug_drawn_changed_orientation">[DEBUG] Orientacja zmieniona: %1$d, poprzednia: : %2$d</string>
 </resources>
