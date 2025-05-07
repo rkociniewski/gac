@@ -1,7 +1,10 @@
 package rk.gac.enums
 
-enum class AdditionalMode {
-    NO,          // Only drawn pericope
-    YES,         // Add additional pericopes
-    CONDITIONAL  // Add additional pericopes when text words more than wordThreshold
+import androidx.annotation.StringRes
+import rk.gac.R
+
+enum class AdditionalMode(@StringRes override val labelRes: Int) : DisplayTextRes {
+    YES(R.string.additional_mode_yes),
+    NO(R.string.additional_mode_no),
+    CONDITIONAL(R.string.additional_mode_conditional)
 }

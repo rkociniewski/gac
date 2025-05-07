@@ -7,6 +7,15 @@
     <string name="settings">Ustawienia</string>
     <string name="section_additional_mode">Tryb dodatkowych perykop</string>
     <string name="section_display_mode">Tryb wyświetlania</string>
+    <string name="draw_mode_button">Przycisk</string>
+    <string name="draw_mode_rotation">Obrót</string>
+    <string name="draw_mode_both">Oba</string>
+    <string name="display_mode_light">Jasny</string>
+    <string name="display_mode_dark">Ciemny</string>
+    <string name="display_mode_system">Systemowy</string>
+    <string name="additional_mode_yes">Tak</string>
+    <string name="additional_mode_no">Nie</string>
+    <string name="additional_mode_conditional">Warunkowo</string>
     <string name="section_draw_mode">Tryb losowania</string>
     <string name="label_word_threshold">Próg słów</string>
     <string name="label_prev">Poprzednie perykopy</string>

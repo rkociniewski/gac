@@ -26,8 +26,10 @@ import androidx.compose.ui.unit.dp
 import rk.gac.R
 import rk.gac.enums.AdditionalMode
 import rk.gac.enums.DisplayMode
+import rk.gac.enums.DisplayTextRes
 import rk.gac.enums.DrawMode
 import rk.gac.model.Config
+import kotlin.enums.EnumEntries
 
 @Composable
 fun ConfigSection(
@@ -48,7 +50,7 @@ fun ConfigSection(
         stringResource(R.string.section_additional_mode),
         style = MaterialTheme.typography.titleMedium
     )
-    ModeSelector(AdditionalMode.entries.toTypedArray(), mode) { mode = it }
+    ModeSelector(AdditionalMode.entries, mode) { mode = it }
 
     if (mode == AdditionalMode.CONDITIONAL) {
         Text(
@@ -74,11 +76,11 @@ fun ConfigSection(
         stringResource(R.string.section_display_mode),
         style = MaterialTheme.typography.titleMedium
     )
-    ModeSelector(DisplayMode.entries.toTypedArray(), displayMode) { displayMode = it }
+    ModeSelector(DisplayMode.entries, displayMode) { displayMode = it }
 
     // Drawn mode
     Text(stringResource(R.string.section_draw_mode), style = MaterialTheme.typography.titleMedium)
-    ModeSelector(DrawMode.entries.toTypedArray(), drawMode) { drawMode = it }
+    ModeSelector(DrawMode.entries, drawMode) { drawMode = it }
 
     Spacer(modifier = Modifier.height(8.dp))
 
@@ -107,13 +109,17 @@ fun ConfigSection(
 }
 
 @Composable
-fun <T : Enum<T>> ModeSelector(options: Array<T>, selected: T, onSelect: (T) -> Unit) {
+fun <T> ModeSelector(
+    options: EnumEntries<T>,
+    selected: T,
+    onSelect: (T) -> Unit
+) where T : Enum<T>, T : DisplayTextRes {
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         options.forEach { opt ->
             FilterChip(
                 selected = selected == opt,
                 onClick = { onSelect(opt) },
-                label = { Text(opt.name) }
+                label = { Text(stringResource(opt.labelRes)) }
             )
         }
     }
