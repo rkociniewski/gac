@@ -85,7 +85,7 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
             gospelPrefix
         )
 
-        val thresholdMet = selectedPericope.text.trim().split("\\s+").size <= config.wordThreshold
+        val thresholdMet = selectedPericope.text.trim().split("\\s+".toRegex()).size <= config.wordThreshold
 
         val useAdditional = when (config.additionalMode) {
             AdditionalMode.YES -> true

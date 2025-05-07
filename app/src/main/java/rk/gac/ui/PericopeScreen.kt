@@ -165,14 +165,16 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
                         }) {
                             Icon(
                                 Icons.Outlined.Shuffle,
-                                contentDescription = stringResource(R.string.draw)
+                                contentDescription = stringResource(R.string.draw),
+                                tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }
                     IconButton(onClick = { showConfigDialog = true }) {
                         Icon(
                             Icons.Outlined.Settings,
-                            contentDescription = stringResource(R.string.settings)
+                            contentDescription = stringResource(R.string.draw),
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }

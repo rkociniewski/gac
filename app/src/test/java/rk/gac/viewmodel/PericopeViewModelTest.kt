@@ -81,7 +81,7 @@ class PericopeViewModelTest {
         )
         vm.drawPericope(1)
 
-        assertEquals(3, vm.pericopes.value.size)
+        assertEquals(1, vm.pericopes.value.size)
     }
 
     @Test
