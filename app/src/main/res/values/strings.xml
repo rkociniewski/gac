@@ -20,8 +20,8 @@
     <string name="label_word_threshold">Próg słów</string>
     <string name="label_prev">Poprzednie perykopy</string>
     <string name="label_next">Następne perykopy</string>
-    <string name="label_start_fallback">Fallback na początku</string>
-    <string name="label_end_fallback">Fallback na końcu</string>
+    <string name="label_start_fallback">Gdy początek Ewangeli…</string>
+    <string name="label_end_fallback">Gdy koniec Ewangeli…</string>
     <string name="debug_cant_drawn">Nie można losować:</string>
     <string name="debug_config_updated">Konfiguracja zaktualizowana: %1$s</string>
     <string name="debug_shuffle_clicked">Ikona shuffle została kliknięta</string>
