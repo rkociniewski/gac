@@ -1,8 +1,15 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import io.gitlab.arturbosch.detekt.Detekt
+import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.manes)
 }
 
 android {
@@ -49,6 +56,7 @@ android {
 }
 
 dependencies {
+    detektPlugins(libs.detekt)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.datastore.preferences)
@@ -74,4 +82,28 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.androidx.ui.tooling)
     testImplementation(libs.coroutines.test)
+}
+
+detekt {
+    config.setFrom("$projectDir/detekt.yml")
+    autoCorrect = true
+}
+
+tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
+    rejectVersionIf {
+        isNonStable(candidate.version) && !isNonStable(currentVersion)
+    }
+}
+
+tasks.withType<Detekt>().configureEach {
+    jvmTarget = JvmTarget.JVM_21.target
+}
+
+tasks.withType<DetektCreateBaselineTask>().configureEach {
+    jvmTarget = JvmTarget.JVM_21.target
+}
+
+private fun isNonStable(version: String): Boolean {
+    return listOf("alpha", "beta", "rc", "cr", "m", "preview", "snapshot", "dev")
+        .any { version.lowercase().contains(it) }
 }

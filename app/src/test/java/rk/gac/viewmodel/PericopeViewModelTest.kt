@@ -70,7 +70,6 @@ class PericopeViewModelTest {
             )
         )
         vm.drawPericope()
-        // Długość każdego tekstu to 5 słów, więc warunek powinien zadziałać
         assertTrue(vm.pericopes.value.size > 1)
     }
 
@@ -107,7 +106,6 @@ class PericopeViewModelTest {
 
         vm.drawPericope(vm.allPericopes.lastIndex)
 
-        // fallback na końcu = 1, ale brak sąsiednich perykop, więc tylko jedna
         assertEquals(2, vm.pericopes.value.size)
     }
 }

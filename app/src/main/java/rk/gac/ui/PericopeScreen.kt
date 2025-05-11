@@ -59,10 +59,51 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
     val scope = rememberCoroutineScope()
     var showConfigDialog by remember { mutableStateOf(false) }
 
+    HandleOrientationChange(viewModel, currentConfig)
+    InitialSetupAndErrorHandling(viewModel, snackBarHostState)
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) },
+        topBar = {
+            PericopeTopAppBar(
+                currentConfig = currentConfig,
+                onDrawClick = {
+                    handleDrawClick(context, currentConfig, viewModel, scope, snackBarHostState)
+                },
+                onConfigClick = { showConfigDialog = true }
+            )
+        }
+    ) { padding ->
+        PericopeContent(
+            pericopes = pericopes,
+            selectedId = selectedId,
+            modifier = Modifier.padding(padding)
+        )
+    }
+
+    if (showConfigDialog) {
+        ConfigDialog(
+            initialConfig = initialConfig,
+            currentConfig = currentConfig,
+            onConfigUpdate = { newConfig ->
+                currentConfig = newConfig
+                viewModel.updateConfig(newConfig)
+            },
+            onDismiss = {
+                showConfigDialog = false
+                viewModel.updateConfig(currentConfig)
+                viewModel.drawPericope()
+            }
+        )
+    }
+}
+
+@Composable
+private fun HandleOrientationChange(viewModel: PericopeViewModel, currentConfig: rk.gac.model.Config) {
+    val context = LocalContext.current
     val configuration = LocalConfiguration.current
     var lastOrientation by remember { mutableIntStateOf(configuration.orientation) }
 
-    // Handle orientation change
     LaunchedEffect(configuration.orientation) {
         Log.d(
             "rk.gac",
@@ -85,8 +126,15 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
         }
         lastOrientation = configuration.orientation
     }
+}
 
-    // Initial draw and error handling
+@Composable
+private fun InitialSetupAndErrorHandling(
+    viewModel: PericopeViewModel,
+    snackBarHostState: SnackbarHostState
+) {
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         Log.d("rk.gac", "[DEBUG] ${context.getString(R.string.debug_initial_drawn_pericope)}")
         viewModel.drawPericope()
@@ -95,120 +143,136 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
             snackBarHostState.showSnackbar(it)
         }
     }
+}
 
-    // Configuration modal dialog
-    if (showConfigDialog) {
-        Dialog(onDismissRequest = {
-            showConfigDialog = false
-            viewModel.updateConfig(currentConfig)
-            viewModel.drawPericope()
-        }) {
-            Surface(
-                shape = MaterialTheme.shapes.medium,
-                tonalElevation = 8.dp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    ConfigSection(
-                        config = initialConfig,
-                        updateConfig = {
-                            currentConfig = it
-                            viewModel.updateConfig(it)
-                        },
-                        onClose = {
-                            showConfigDialog = false
-                            viewModel.updateConfig(currentConfig)
-                            viewModel.drawPericope()
-                        }
-                    )
+private fun handleDrawClick(
+    context: android.content.Context,
+    currentConfig: rk.gac.model.Config,
+    viewModel: PericopeViewModel,
+    scope: kotlinx.coroutines.CoroutineScope,
+    snackBarHostState: SnackbarHostState
+) {
+    Log.d("rk.gac", "[DEBUG] ${context.getString(R.string.debug_shuffle_clicked)}")
 
-                    if (currentConfig.additionalMode != AdditionalMode.NO &&
-                        currentConfig.prevCount == 0 && currentConfig.nextCount == 0
-                    ) {
-                        Text(
-                            text = stringResource(R.string.error_no_additional),
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) },
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                title = { Text(stringResource(R.string.app_name)) },
-                actions = {
-                    if (currentConfig.drawMode == DrawMode.BUTTON || currentConfig.drawMode == DrawMode.BOTH) {
-                        IconButton(onClick = {
-                            Log.d(
-                                "rk.gac",
-                                "[DEBUG] ${context.getString(R.string.debug_shuffle_clicked)}"
-                            )
-                            if (currentConfig.additionalMode != AdditionalMode.NO &&
-                                currentConfig.prevCount == 0 && currentConfig.nextCount == 0
-                            ) {
-                                scope.launch {
-                                    snackBarHostState.showSnackbar(
-                                        "${context.getString(R.string.debug_cant_drawn)}: ${
-                                            context.getString(
-                                                R.string.error_no_additional
-                                            )
-                                        }"
-                                    )
-                                }
-                            } else {
-                                viewModel.drawPericope()
-                            }
-                        }) {
-                            Icon(
-                                Icons.Outlined.Shuffle,
-                                contentDescription = stringResource(R.string.draw),
-                                tint = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                    }
-                    IconButton(onClick = { showConfigDialog = true }) {
-                        Icon(
-                            Icons.Outlined.Settings,
-                            contentDescription = stringResource(R.string.draw),
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
+    if (currentConfig.additionalMode != AdditionalMode.NO &&
+        currentConfig.prevCount == 0 && currentConfig.nextCount == 0
+    ) {
+        scope.launch {
+            snackBarHostState.showSnackbar(
+                "${context.getString(R.string.debug_cant_drawn)}: ${
+                    context.getString(R.string.error_no_additional)
+                }"
             )
         }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            pericopes.forEach { p ->
-                Text(
-                    text = "${p.reference} — ${p.title}\n${p.text}",
-                    fontWeight = if (p.id == selectedId) FontWeight.Bold else FontWeight.Normal,
-                    style = MaterialTheme.typography.bodyLarge
+    } else {
+        viewModel.drawPericope()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PericopeTopAppBar(
+    currentConfig: rk.gac.model.Config,
+    onDrawClick: () -> Unit,
+    onConfigClick: () -> Unit
+) {
+    TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        title = { Text(stringResource(R.string.app_name)) },
+        actions = {
+            if (currentConfig.drawMode == DrawMode.BUTTON || currentConfig.drawMode == DrawMode.BOTH) {
+                IconButton(onClick = onDrawClick) {
+                    Icon(
+                        Icons.Outlined.Shuffle,
+                        contentDescription = stringResource(R.string.draw),
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+            IconButton(onClick = onConfigClick) {
+                Icon(
+                    Icons.Outlined.Settings,
+                    contentDescription = stringResource(R.string.draw),
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
-                Spacer(Modifier.height(12.dp))
+            }
+        }
+    )
+}
+
+@Composable
+private fun PericopeContent(
+    pericopes: List<rk.gac.model.Pericope>,
+    selectedId: String?,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()), Arrangement.spacedBy(12.dp)
+    ) {
+        pericopes.forEach { pericope ->
+            PericopeItem(pericope, pericope.id == selectedId)
+            Spacer(Modifier.height(12.dp))
+        }
+    }
+}
+
+@Composable
+private fun PericopeItem(pericope: rk.gac.model.Pericope, isMain: Boolean) {
+    Text(
+        text = "${pericope.reference} — ${pericope.title}\n${pericope.text}",
+        fontWeight = if (isMain) FontWeight.Bold else FontWeight.Normal,
+        style = MaterialTheme.typography.bodyLarge
+    )
+}
+
+@Composable
+private fun ConfigDialog(
+    initialConfig: rk.gac.model.Config,
+    currentConfig: rk.gac.model.Config,
+    onConfigUpdate: (rk.gac.model.Config) -> Unit,
+    onDismiss: () -> Unit
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = MaterialTheme.shapes.medium,
+            tonalElevation = 8.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                ConfigSection(
+                    config = initialConfig,
+                    updateConfig = onConfigUpdate,
+                    onClose = onDismiss
+                )
+
+                if (currentConfig.additionalMode != AdditionalMode.NO &&
+                    currentConfig.prevCount == 0 && currentConfig.nextCount == 0
+                ) {
+                    ConfigErrorMessage()
+                }
             }
         }
     }
+}
+
+@Composable
+private fun ConfigErrorMessage() {
+    Text(
+        text = stringResource(R.string.error_no_additional),
+        color = MaterialTheme.colorScheme.error,
+        style = MaterialTheme.typography.bodyMedium
+    )
 }

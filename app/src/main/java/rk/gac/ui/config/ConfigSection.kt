@@ -166,6 +166,7 @@ fun <T> ModeSelector(
     }
 }
 
+@Suppress("MagicNumber")
 @Composable
 fun WordThresholdSelector(selected: Int, onChange: (Int) -> Unit) {
     val options = listOf(25, 50, 75, 100)

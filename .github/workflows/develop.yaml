@@ -1,25 +1,29 @@
 name: Develop Build and Test
 
 on:
-    push:
-        branches:
-            - develop
+  push:
+    branches:
+      - develop
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            -   name: Checkout code
-                uses: actions/checkout@v3
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout code
+        uses: actions/checkout@v3
 
-            -   name: Set up JDK 21
-                uses: actions/setup-java@v3
-                with:
-                    distribution: 'temurin'
-                    java-version: '21'
+      -
+        name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
 
-            -   name: Grant execute permission for gradlew
-                run: chmod +x gradlew
+      -
+        name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-            -   name: Build and run tests
-                run: ./gradlew clean build test detekt
+      -
+        name: Build and run tests
+        run: ./gradlew clean build test detekt
