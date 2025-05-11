@@ -1,14 +1,38 @@
 package rk.gac.ui
 
 import android.util.Log
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Shuffle
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -42,12 +66,21 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
     LaunchedEffect(configuration.orientation) {
         Log.d(
             "rk.gac",
-            "[DEBUG] ${context.getString(R.string.debug_drawn_changed_orientation, configuration.orientation, lastOrientation)}"
+            "[DEBUG] ${
+                context.getString(
+                    R.string.debug_drawn_changed_orientation,
+                    configuration.orientation,
+                    lastOrientation
+                )
+            }"
         )
         if ((currentConfig.drawMode == DrawMode.ROTATION || currentConfig.drawMode == DrawMode.BOTH) &&
             lastOrientation != configuration.orientation
         ) {
-            Log.d("rk.gac", "[DEBUG] ${context.getString(R.string.debug_drawn_pericope_orientation)}")
+            Log.d(
+                "rk.gac",
+                "[DEBUG] ${context.getString(R.string.debug_drawn_pericope_orientation)}"
+            )
             viewModel.drawPericope()
         }
         lastOrientation = configuration.orientation
@@ -58,8 +91,8 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
         Log.d("rk.gac", "[DEBUG] ${context.getString(R.string.debug_initial_drawn_pericope)}")
         viewModel.drawPericope()
 
-        viewModel.error.collect { msg ->
-            snackBarHostState.showSnackbar(msg)
+        viewModel.error.collect {
+            snackBarHostState.showSnackbar(it)
         }
     }
 
@@ -84,8 +117,11 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     ConfigSection(
-                        config = currentConfig,
-                        updateConfig = { currentConfig = it },
+                        config = initialConfig,
+                        updateConfig = {
+                            currentConfig = it
+                            viewModel.updateConfig(it)
+                        },
                         onClose = {
                             showConfigDialog = false
                             viewModel.updateConfig(currentConfig)
@@ -119,13 +155,20 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
                 actions = {
                     if (currentConfig.drawMode == DrawMode.BUTTON || currentConfig.drawMode == DrawMode.BOTH) {
                         IconButton(onClick = {
-                            Log.d("rk.gac", "[DEBUG] ${context.getString(R.string.debug_shuffle_clicked)}")
+                            Log.d(
+                                "rk.gac",
+                                "[DEBUG] ${context.getString(R.string.debug_shuffle_clicked)}"
+                            )
                             if (currentConfig.additionalMode != AdditionalMode.NO &&
                                 currentConfig.prevCount == 0 && currentConfig.nextCount == 0
                             ) {
                                 scope.launch {
                                     snackBarHostState.showSnackbar(
-                                        "${context.getString(R.string.debug_cant_drawn)}: ${context.getString(R.string.error_no_additional)}"
+                                        "${context.getString(R.string.debug_cant_drawn)}: ${
+                                            context.getString(
+                                                R.string.error_no_additional
+                                            )
+                                        }"
                                     )
                                 }
                             } else {

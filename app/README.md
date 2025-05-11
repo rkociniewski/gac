@@ -1,6 +1,8 @@
 # 🎲 Gospel A Caso
 
-**Gospel A Caso** is a minimalist Android app that helps you read the Gospel by selecting random Gospel pericopes (passages) — either on demand or triggered by device rotation. It supports multiple configuration modes and is inspired by spiritual reflection, randomness, and simplicity.
+**Gospel A Caso** is a minimalist Android app that helps you read the Gospel by selecting random
+Gospel pericopes (passages) — either on demand or triggered by device rotation. It supports multiple
+configuration modes and is inspired by spiritual reflection, randomness, and simplicity.
 
 ---
 
@@ -28,7 +30,8 @@
 
 ## 📁 Assets
 
-- JSON data of the Gospel pericopes is stored in [`res/raw/pl_gospel.json`](./app/src/main/res/raw/pl_gospel.json).
+- JSON data of the Gospel pericopes is stored in [
+  `res/raw/pl_gospel.json`](./app/src/main/res/raw/pl_gospel.json).
 - Application icon is a minimalist magenta die with a Bible, matching the app's aesthetic.
 
 ---

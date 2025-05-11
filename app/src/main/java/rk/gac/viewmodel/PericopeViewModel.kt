@@ -45,17 +45,14 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
     init {
         viewModelScope.launch {
             // load persisted config
-            ConfigStore.read(context).collect { storedConfig ->
-                _config.value = storedConfig
-                if (allPericopes.isNotEmpty()) {
-                    drawPericope()
-                }
-            }
+            ConfigStore.read(context).collect { _config.value = it }
         }
+
         viewModelScope.launch {
             val list = loadPericopesFromRaw(context)
             allPericopes.clear()
             allPericopes.addAll(list)
+            drawPericope()
         }
     }
 
@@ -87,7 +84,8 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
             gospelPrefix
         )
 
-        val thresholdMet = selectedPericope.text.trim().split("\\s+".toRegex()).size <= config.wordThreshold
+        val thresholdMet =
+            selectedPericope.text.trim().split("\\s+".toRegex()).size <= config.wordThreshold
 
         val useAdditional = when (config.additionalMode) {
             AdditionalMode.YES -> true
@@ -120,6 +118,8 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun updateConfig(newConfig: Config) {
+        Log.d("rk.gac", "[DEBUG] ${context.getString(R.string.debug_config_updated, newConfig)}")
+
         _config.value = newConfig
         viewModelScope.launch {
             ConfigStore.write(context, newConfig)

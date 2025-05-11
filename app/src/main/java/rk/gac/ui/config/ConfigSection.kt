@@ -27,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -45,8 +44,7 @@ fun ConfigSection(
     updateConfig: (Config) -> Unit,
     onClose: () -> Unit
 ) {
-    val view = LocalView.current
-
+    // Additional mode pericopes
     HelpLabel(
         stringResource(R.string.section_additional_mode),
         stringResource(R.string.tooltip_additional_mode)
@@ -84,6 +82,7 @@ fun ConfigSection(
 
     HorizontalDivider()
 
+    // Dark mode display mode
     HelpLabel(
         stringResource(R.string.section_display_mode),
         stringResource(R.string.tooltip_display_mode)
@@ -149,7 +148,6 @@ fun HelpLabel(label: String, tooltip: String) {
         }
     }
 }
-
 
 @Composable
 fun <T> ModeSelector(
