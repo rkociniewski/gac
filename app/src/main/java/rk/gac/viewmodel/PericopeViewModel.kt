@@ -40,20 +40,22 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun isSameGospel(p: Pericope?, gp: String): Boolean =
-        p?.id?.startsWith("${gp}_") ?: false
+        p?.id?.startsWith("${gp}_") == true
 
     init {
         viewModelScope.launch {
             // load persisted config
             ConfigStore.read(context).collect { storedConfig ->
                 _config.value = storedConfig
+                if (allPericopes.isNotEmpty()) {
+                    drawPericope()
+                }
             }
         }
         viewModelScope.launch {
             val list = loadPericopesFromRaw(context)
             allPericopes.clear()
             allPericopes.addAll(list)
-            drawPericope()
         }
     }
 

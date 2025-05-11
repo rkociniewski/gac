@@ -87,12 +87,14 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
 
     // Initial draw and error handling
     LaunchedEffect(Unit) {
-        Log.d("rk.gac", "[DEBUG] ${context.getString(R.string.debug_initial_drawn_pericope)}")
-        viewModel.drawPericope()
         viewModel.error.collect { msg ->
             snackbarHostState.showSnackbar(msg)
         }
+        
+        Log.d("rk.gac", "[DEBUG] ${context.getString(R.string.debug_initial_drawn_pericope)}")
+        viewModel.drawPericope()
     }
+
 
     // Configuration modal dialog
     if (showConfigDialog) {
