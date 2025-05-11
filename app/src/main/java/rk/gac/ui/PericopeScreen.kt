@@ -53,7 +53,7 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
     val context = LocalContext.current
     val config by viewModel.config.collectAsState()
     val pericopes by viewModel.pericopes.collectAsState()
-    val selectedIndex = viewModel.selectedIndex
+    val selectedId by viewModel.selectedId.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     var showConfigDialog by remember { mutableStateOf(false) }
@@ -90,7 +90,7 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
         viewModel.error.collect { msg ->
             snackbarHostState.showSnackbar(msg)
         }
-        
+
         Log.d("rk.gac", "[DEBUG] ${context.getString(R.string.debug_initial_drawn_pericope)}")
         viewModel.drawPericope()
     }
@@ -113,12 +113,11 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     ConfigSection(
-                        initialConfig = config,
-                        onConfigChange = {
-                            viewModel.updateConfig(it)
-                            showConfigDialog = false
-                        },
+                        config = config,
+                        updateConfig = { viewModel.updateConfig(it) },
+                        onClose = { showConfigDialog = false }
                     )
+
                     if (config.additionalMode != AdditionalMode.NO &&
                         config.prevCount == 0 && config.nextCount == 0
                     ) {
@@ -194,7 +193,7 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
             pericopes.forEachIndexed { index, p ->
                 Text(
                     text = "${p.reference} — ${p.title}\n${p.text}",
-                    fontWeight = if (index == selectedIndex) FontWeight.Bold else FontWeight.Normal,
+                    fontWeight = if (p.id == selectedId) FontWeight.Bold else FontWeight.Normal,
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(Modifier.height(12.dp))

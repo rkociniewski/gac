@@ -28,8 +28,8 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
 
     internal val allPericopes = mutableListOf<Pericope>()
 
-    var selectedIndex = 0
-        private set
+    private val _selectedId = MutableStateFlow<String?>(null)
+    val selectedId: StateFlow<String?> = _selectedId
 
     val error = MutableSharedFlow<String>()
 
@@ -64,7 +64,7 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
 
         val selected = forcedIndex ?: allPericopes.indices.random()
         val selectedPericope = allPericopes[selected]
-        selectedIndex = 0 // will be recalculated below
+        _selectedId.value = selectedPericope.id
 
         Log.d(
             "rk.gac",
@@ -116,7 +116,6 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
             result.add(allPericopes[i])
         }
 
-        selectedIndex = result.indexOfFirst { it.id == selectedPericope.id }
         _pericopes.value = result
     }
 
