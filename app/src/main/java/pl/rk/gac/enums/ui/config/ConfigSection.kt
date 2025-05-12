@@ -1,4 +1,4 @@
-package rk.gac.ui.config
+package pl.rk.gac.enums.ui.config
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,12 +30,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import pl.rk.gac.enums.enums.DisplayMode
+import pl.rk.gac.enums.enums.DisplayText
+import pl.rk.gac.enums.enums.DrawMode
+import pl.rk.gac.enums.model.Config
 import rk.gac.R
 import rk.gac.enums.AdditionalMode
-import rk.gac.enums.DisplayMode
-import rk.gac.enums.DisplayText
-import rk.gac.enums.DrawMode
-import rk.gac.model.Config
 import kotlin.enums.EnumEntries
 
 /**

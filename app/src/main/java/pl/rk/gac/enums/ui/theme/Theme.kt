@@ -1,4 +1,4 @@
-package rk.gac.ui.theme
+package pl.rk.gac.enums.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

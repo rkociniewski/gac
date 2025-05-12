@@ -1,8 +1,8 @@
-package rk.gac.model
+package pl.rk.gac.enums.model
 
+import pl.rk.gac.enums.enums.DisplayMode
+import pl.rk.gac.enums.enums.DrawMode
 import rk.gac.enums.AdditionalMode
-import rk.gac.enums.DisplayMode
-import rk.gac.enums.DrawMode
 
 /**
  * Configuration data class for the application settings.

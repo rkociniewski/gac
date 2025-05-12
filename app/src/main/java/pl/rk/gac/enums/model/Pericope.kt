@@ -1,4 +1,4 @@
-package rk.gac.model
+package pl.rk.gac.enums.model
 
 import kotlinx.serialization.Serializable
 

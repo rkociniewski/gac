@@ -1,4 +1,4 @@
-package rk.gac.viewmodel
+package pl.rk.gac.enums.viewmodel
 
 import android.app.Application
 import android.content.Context
@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import pl.rk.gac.enums.model.Config
+import pl.rk.gac.enums.model.Pericope
+import pl.rk.gac.enums.storage.ConfigStore
 import rk.gac.R
 import rk.gac.enums.AdditionalMode
-import rk.gac.model.Config
-import rk.gac.model.Pericope
-import rk.gac.storage.ConfigStore
 import java.io.InputStream
 
 /**

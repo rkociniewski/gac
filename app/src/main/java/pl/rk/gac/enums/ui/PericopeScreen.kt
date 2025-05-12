@@ -1,5 +1,6 @@
-package rk.gac.ui
+package pl.rk.gac.enums.ui
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,12 +41,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import pl.rk.gac.enums.enums.DrawMode
+import pl.rk.gac.enums.model.Config
+import pl.rk.gac.enums.model.Pericope
+import pl.rk.gac.enums.ui.config.ConfigSection
 import rk.gac.R
 import rk.gac.enums.AdditionalMode
-import rk.gac.enums.DrawMode
-import rk.gac.ui.config.ConfigSection
-import rk.gac.viewmodel.PericopeViewModel
+import pl.rk.gac.enums.viewmodel.PericopeViewModel
 
 /**
  * Main screen composable for displaying pericopes (Gospel passages).
@@ -124,7 +128,7 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
  * @param currentConfig The current application configuration
  */
 @Composable
-private fun HandleOrientationChange(viewModel: PericopeViewModel, currentConfig: rk.gac.model.Config) {
+private fun HandleOrientationChange(viewModel: PericopeViewModel, currentConfig: Config) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     var lastOrientation by remember { mutableIntStateOf(configuration.orientation) }
@@ -192,10 +196,10 @@ private fun InitialSetupAndErrorHandling(
  * @param snackBarHostState The host state for displaying snackbar messages
  */
 private fun handleDrawClick(
-    context: android.content.Context,
-    currentConfig: rk.gac.model.Config,
+    context: Context,
+    currentConfig: Config,
     viewModel: PericopeViewModel,
-    scope: kotlinx.coroutines.CoroutineScope,
+    scope: CoroutineScope,
     snackBarHostState: SnackbarHostState
 ) {
     Log.d("rk.gac", "[DEBUG] ${context.getString(R.string.debug_shuffle_clicked)}")
@@ -228,7 +232,7 @@ private fun handleDrawClick(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PericopeTopAppBar(
-    currentConfig: rk.gac.model.Config,
+    currentConfig: Config,
     onDrawClick: () -> Unit,
     onConfigClick: () -> Unit
 ) {
@@ -271,7 +275,7 @@ private fun PericopeTopAppBar(
  */
 @Composable
 private fun PericopeContent(
-    pericopes: List<rk.gac.model.Pericope>,
+    pericopes: List<Pericope>,
     selectedId: String?,
     modifier: Modifier = Modifier
 ) {
@@ -298,7 +302,7 @@ private fun PericopeContent(
  * @param isMain Whether this is the main (selected) pericope
  */
 @Composable
-private fun PericopeItem(pericope: rk.gac.model.Pericope, isMain: Boolean) {
+private fun PericopeItem(pericope: Pericope, isMain: Boolean) {
     Text(
         text = "${pericope.reference} — ${pericope.title}\n${pericope.text}",
         fontWeight = if (isMain) FontWeight.Bold else FontWeight.Normal,
@@ -319,9 +323,9 @@ private fun PericopeItem(pericope: rk.gac.model.Pericope, isMain: Boolean) {
  */
 @Composable
 private fun ConfigDialog(
-    initialConfig: rk.gac.model.Config,
-    currentConfig: rk.gac.model.Config,
-    onConfigUpdate: (rk.gac.model.Config) -> Unit,
+    initialConfig: Config,
+    currentConfig: Config,
+    onConfigUpdate: (Config) -> Unit,
     onDismiss: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {

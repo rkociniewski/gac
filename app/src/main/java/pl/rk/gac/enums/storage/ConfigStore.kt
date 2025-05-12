@@ -1,4 +1,4 @@
-package rk.gac.storage
+package pl.rk.gac.enums.storage
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
@@ -7,10 +7,10 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import pl.rk.gac.enums.enums.DisplayMode
+import pl.rk.gac.enums.enums.DrawMode
+import pl.rk.gac.enums.model.Config
 import rk.gac.enums.AdditionalMode
-import rk.gac.enums.DisplayMode
-import rk.gac.enums.DrawMode
-import rk.gac.model.Config
 
 /**
  * Manages configuration data persistence using Jetpack DataStore preferences.

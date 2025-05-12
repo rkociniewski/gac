@@ -11,9 +11,10 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import pl.rk.gac.enums.viewmodel.PericopeViewModel
 import rk.gac.enums.AdditionalMode
-import rk.gac.model.Config
-import rk.gac.model.Pericope
+import pl.rk.gac.enums.model.Config
+import pl.rk.gac.enums.model.Pericope
 
 class PericopeViewModelTest {
     private val mockApp = mockk<Application>(relaxed = true)
