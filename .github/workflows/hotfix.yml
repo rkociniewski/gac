@@ -1,0 +1,13 @@
+name: Hotfix Patch Check
+
+on:
+  push:
+    branches:
+      - 'hotfix/**'
+
+jobs:
+  android-build:
+    uses: ./.github/workflows/android-build.yml
+    with:
+      run_tests: true
+      build_release: false

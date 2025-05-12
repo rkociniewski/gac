@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.manes)
     alias(libs.plugins.dokka)
+    alias(libs.plugins.test.logger)
 }
 
 android {
@@ -110,7 +111,7 @@ tasks.dokkaHtml {
     dokkaSourceSets {
         named("main") { // source set name.
             jdkVersion.set(java.targetCompatibility.toString().toInt()) // Used for linking to JDK documentation
-            skipDeprecated.set(false) // Add output to deprecated members. Applies globally, can be overridden by packageOptions
+            skipDeprecated.set(false)
             includeNonPublic.set(true) // non-public modifiers should be documented
         }
     }
@@ -119,4 +120,12 @@ tasks.dokkaHtml {
 private fun isNonStable(version: String): Boolean {
     return listOf("alpha", "beta", "rc", "cr", "m", "preview", "snapshot", "dev")
         .any { version.lowercase().contains(it) }
+}
+
+testlogger {
+    showStackTraces = false
+    showFullStackTraces = false
+    showCauses = false
+    slowThreshold = 10000
+    showSimpleNames = true
 }
