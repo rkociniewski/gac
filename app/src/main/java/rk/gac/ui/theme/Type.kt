@@ -6,6 +6,15 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
+/**
+ * Typography definitions for the application.
+ *
+ * This object defines the text styles used throughout the application, ensuring consistent
+ * typography across different UI components.
+ *
+ * The Typography object includes customized styles for body text, with other styles
+ * using Material defaults.
+ */
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(

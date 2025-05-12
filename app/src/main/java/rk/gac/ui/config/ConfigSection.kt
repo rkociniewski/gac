@@ -33,11 +33,21 @@ import kotlinx.coroutines.launch
 import rk.gac.R
 import rk.gac.enums.AdditionalMode
 import rk.gac.enums.DisplayMode
-import rk.gac.enums.DisplayTextRes
+import rk.gac.enums.DisplayText
 import rk.gac.enums.DrawMode
 import rk.gac.model.Config
 import kotlin.enums.EnumEntries
 
+/**
+ * A composable function that displays the configuration section in a modal dialog.
+ *
+ * This component provides UI controls for all application settings including additional mode options,
+ * display mode preferences, and draw mode settings.
+ *
+ * @param config The current configuration being edited
+ * @param updateConfig Callback to update the configuration when changes are made
+ * @param onClose Callback to close the configuration dialog
+ */
 @Composable
 fun ConfigSection(
     config: Config,
@@ -112,6 +122,15 @@ fun ConfigSection(
     }
 }
 
+/**
+ * A composable function that displays a label with an information tooltip.
+ *
+ * This component pairs a text label with an information icon. When the icon is clicked,
+ * it displays a tooltip with additional helpful information.
+ *
+ * @param label The primary text to display as the label
+ * @param tooltip The text to display in the tooltip when the info icon is clicked
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HelpLabel(label: String, tooltip: String) {
@@ -150,23 +169,44 @@ fun HelpLabel(label: String, tooltip: String) {
     }
 }
 
+/**
+ * A composable function that creates a row of selectable filter chips for enum options.
+ *
+ * This generic component creates a horizontal row of filter chips based on the provided enum options.
+ * It highlights the currently selected option and invokes the onSelect callback when a different option is chosen.
+ *
+ * @param T The enum type that implements DisplayText interface
+ * @param options The enum entries to display as options
+ * @param selected The currently selected enum value
+ * @param onSelect Callback invoked when a different option is selected
+ */
 @Composable
 fun <T> ModeSelector(
     options: EnumEntries<T>,
     selected: T,
     onSelect: (T) -> Unit
-) where T : Enum<T>, T : DisplayTextRes {
+) where T : Enum<T>, T : DisplayText {
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         options.forEach { opt ->
             FilterChip(
                 selected = selected == opt,
                 onClick = { onSelect(opt) },
-                label = { Text(stringResource(opt.labelRes)) }
+                label = { Text(stringResource(opt.label)) }
             )
         }
     }
 }
 
+/**
+ * A composable function that displays a slider with a text value indicator.
+ *
+ * This component provides a slider control for numerical values with a text display
+ * of the current value centered beneath the slider.
+ *
+ * @param value The current integer value of the slider
+ * @param range The range of possible values for the slider with a specified step
+ * @param onValueChange Callback invoked when the slider value changes
+ */
 @Composable
 fun ConfigSlider(value: Int, range: IntProgression = 0..2 step 1, onValueChange: (Int) -> Unit){
     Column {

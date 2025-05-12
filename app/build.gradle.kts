@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.detekt)
     alias(libs.plugins.manes)
+    alias(libs.plugins.dokka)
 }
 
 android {
@@ -101,6 +102,18 @@ tasks.withType<Detekt>().configureEach {
 
 tasks.withType<DetektCreateBaselineTask>().configureEach {
     jvmTarget = JvmTarget.JVM_21.target
+}
+
+tasks.dokkaHtml {
+    outputDirectory.set(layout.buildDirectory.dir("dokka")) // output directory of dokka documentation.
+    // source set configuration.
+    dokkaSourceSets {
+        named("main") { // source set name.
+            jdkVersion.set(java.targetCompatibility.toString().toInt()) // Used for linking to JDK documentation
+            skipDeprecated.set(false) // Add output to deprecated members. Applies globally, can be overridden by packageOptions
+            includeNonPublic.set(true) // non-public modifiers should be documented
+        }
+    }
 }
 
 private fun isNonStable(version: String): Boolean {

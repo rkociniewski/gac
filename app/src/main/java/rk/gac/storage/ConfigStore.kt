@@ -12,8 +12,16 @@ import rk.gac.enums.DisplayMode
 import rk.gac.enums.DrawMode
 import rk.gac.model.Config
 
+/**
+ * Manages configuration data persistence using Jetpack DataStore preferences.
+ * Provides functionality to read and write application configuration settings.
+ */
 private val Context.dataStore by preferencesDataStore("config")
 
+/**
+ * Object responsible for managing application configuration data.
+ * Uses Android's DataStore preferences for persisting configuration values.
+ */
 object ConfigStore {
     private val ADDITIONAL_MODE = stringPreferencesKey("additional_mode")
     private val WORD_THRESHOLD = intPreferencesKey("word_threshold")

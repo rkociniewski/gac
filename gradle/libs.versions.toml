@@ -15,6 +15,7 @@ lifecycleRuntimeKtx = "2.9.0"
 manes = "0.52.0"
 mockk = "1.14.2"
 serialization = "1.8.1"
+dokka = "2.0.0"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -48,3 +49,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 manes = { id = "com.github.ben-manes.versions", version.ref = "manes" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }

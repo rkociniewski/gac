@@ -47,6 +47,22 @@ import rk.gac.enums.DrawMode
 import rk.gac.ui.config.ConfigSection
 import rk.gac.viewmodel.PericopeViewModel
 
+/**
+ * Main screen composable for displaying pericopes (Gospel passages).
+ *
+ * This component serves as the main UI for the application, integrating all the necessary
+ * functionality for viewing Gospel passages, handling configuration changes, and managing
+ * orientation-based interactions.
+ *
+ * The screen includes:
+ * - A top app bar with draw and configuration options
+ * - A scrollable list of pericope items
+ * - A configuration dialog triggered by the settings button
+ * - Orientation change handling for rotation-based draws
+ * - Error handling and snackbar notifications
+ *
+ * @param viewModel The ViewModel that provides data and handles business logic for this screen
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PericopeScreen(viewModel: PericopeViewModel) {
@@ -98,6 +114,15 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
     }
 }
 
+/**
+ * Handles device orientation changes for drawing pericopes.
+ *
+ * This composable monitors device orientation changes and triggers a pericope draw
+ * when the configuration includes rotation-based drawing modes.
+ *
+ * @param viewModel The ViewModel that handles the drawing of pericopes
+ * @param currentConfig The current application configuration
+ */
 @Composable
 private fun HandleOrientationChange(viewModel: PericopeViewModel, currentConfig: rk.gac.model.Config) {
     val context = LocalContext.current
@@ -128,6 +153,15 @@ private fun HandleOrientationChange(viewModel: PericopeViewModel, currentConfig:
     }
 }
 
+/**
+ * Handles initial setup and error collection for the pericope screen.
+ *
+ * This composable performs the initial pericope draw when the screen launches and
+ * sets up error collection from the ViewModel to display in snackbars.
+ *
+ * @param viewModel The ViewModel that provides pericopes and error information
+ * @param snackBarHostState The host state for displaying snackbar messages
+ */
 @Composable
 private fun InitialSetupAndErrorHandling(
     viewModel: PericopeViewModel,
@@ -145,6 +179,18 @@ private fun InitialSetupAndErrorHandling(
     }
 }
 
+/**
+ * Handles the draw button click event.
+ *
+ * This function validates the current configuration before drawing a new pericope.
+ * If the configuration would result in no pericopes being displayed, it shows an error message.
+ *
+ * @param context The Android context for resource access
+ * @param currentConfig The current application configuration
+ * @param viewModel The ViewModel that handles pericope drawing
+ * @param scope The coroutine scope for launching snackbar displays
+ * @param snackBarHostState The host state for displaying snackbar messages
+ */
 private fun handleDrawClick(
     context: android.content.Context,
     currentConfig: rk.gac.model.Config,
@@ -169,6 +215,16 @@ private fun handleDrawClick(
     }
 }
 
+/**
+ * Top app bar for the pericope screen.
+ *
+ * This composable creates the application's top bar, which includes the app title and
+ * action buttons for drawing new pericopes and accessing configuration options.
+ *
+ * @param currentConfig The current application configuration
+ * @param onDrawClick Callback invoked when the draw button is clicked
+ * @param onConfigClick Callback invoked when the configuration button is clicked
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PericopeTopAppBar(
@@ -203,6 +259,16 @@ private fun PericopeTopAppBar(
     )
 }
 
+/**
+ * Main content area displaying the list of pericopes.
+ *
+ * This composable creates a scrollable column of pericope items, with the selected
+ * pericope visually distinguished from others.
+ *
+ * @param pericopes List of pericopes to display
+ * @param selectedId ID of the currently selected pericope
+ * @param modifier Modifier to be applied to the content container
+ */
 @Composable
 private fun PericopeContent(
     pericopes: List<rk.gac.model.Pericope>,
@@ -222,6 +288,15 @@ private fun PericopeContent(
     }
 }
 
+/**
+ * Individual pericope item display.
+ *
+ * This composable displays a single pericope with its reference, title, and text content.
+ * The main (selected) pericope is displayed with bold text for emphasis.
+ *
+ * @param pericope The pericope data to display
+ * @param isMain Whether this is the main (selected) pericope
+ */
 @Composable
 private fun PericopeItem(pericope: rk.gac.model.Pericope, isMain: Boolean) {
     Text(
@@ -231,6 +306,17 @@ private fun PericopeItem(pericope: rk.gac.model.Pericope, isMain: Boolean) {
     )
 }
 
+/**
+ * Configuration dialog for application settings.
+ *
+ * This composable displays a modal dialog containing configuration options for the application.
+ * It shows the configuration section and any validation error messages.
+ *
+ * @param initialConfig The original configuration before any changes
+ * @param currentConfig The current working configuration being edited
+ * @param onConfigUpdate Callback to update the configuration when changes are made
+ * @param onDismiss Callback invoked when the dialog is dismissed
+ */
 @Composable
 private fun ConfigDialog(
     initialConfig: rk.gac.model.Config,
@@ -268,6 +354,12 @@ private fun ConfigDialog(
     }
 }
 
+/**
+ * Error message displayed in the configuration dialog when invalid settings are detected.
+ *
+ * This composable displays an error message in the configuration dialog when the user
+ * has selected settings that would result in no pericopes being displayed.
+ */
 @Composable
 private fun ConfigErrorMessage() {
     Text(

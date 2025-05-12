@@ -11,6 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
+/**
+ * Light color scheme definition for the application theme.
+ *
+ * This color scheme is used when the app is in light mode or when dynamic coloring is unavailable.
+ */
 val LightColorScheme = lightColorScheme(
     primary = MagentaPrimary,
     onPrimary = MagentaOnPrimary,
@@ -19,6 +24,11 @@ val LightColorScheme = lightColorScheme(
     surface = Color(0xFFFFFFFF),
 )
 
+/**
+ * Dark color scheme definition for the application theme.
+ *
+ * This color scheme is used when the app is in dark mode or when dynamic coloring is unavailable.
+ */
 val DarkColorScheme = darkColorScheme(
     primary = MagentaPrimary,
     onPrimary = MagentaOnPrimary,
@@ -37,6 +47,16 @@ val DarkColorScheme = darkColorScheme(
     */
 )
 
+/**
+ * Main theme composable for the Gospel A Caso application.
+ *
+ * This function applies the appropriate theme based on the current system settings and device capabilities.
+ * It supports dynamic coloring on Android 12+ and handles the dark/light theme switching.
+ *
+ * @param darkTheme Whether to use the dark theme. Defaults to the system setting.
+ * @param dynamicColor Whether to use Material You dynamic coloring on supported devices. Defaults to true.
+ * @param content The composable content to which this theme should be applied.
+ */
 @Composable
 fun GospelACasoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
