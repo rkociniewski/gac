@@ -58,7 +58,8 @@ fun ConfigSection(
             stringResource(R.string.label_word_threshold),
             stringResource(R.string.tooltip_word_threshold)
         )
-        WordThresholdSelector(config.wordThreshold) {
+        @Suppress("MagicNumber")
+        ConfigSlider(config.wordThreshold,  (20..100 step 10)) {
             updateConfig(config.copy(wordThreshold = it))
         }
     }
@@ -166,34 +167,14 @@ fun <T> ModeSelector(
     }
 }
 
-@Suppress("MagicNumber")
 @Composable
-fun WordThresholdSelector(selected: Int, onChange: (Int) -> Unit) {
-    val options = listOf(25, 50, 75, 100)
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        options.forEach {
-            FilterChip(
-                selected = selected == it,
-                onClick = { onChange(it) },
-                label = { Text("$it") }
-            )
-        }
-    }
-}
-
-@Composable
-fun ConfigSlider(value: Int, onValueChange: (Int) -> Unit) {
-    SliderWithLabel(value = value, onValueChange = onValueChange, range = 0..2)
-}
-
-@Composable
-fun SliderWithLabel(value: Int, onValueChange: (Int) -> Unit, range: IntRange) {
+fun ConfigSlider(value: Int, range: IntProgression = 0..2 step 1, onValueChange: (Int) -> Unit){
     Column {
         Slider(
             value = value.toFloat(),
             onValueChange = { onValueChange(it.toInt()) },
             valueRange = range.first.toFloat()..range.last.toFloat(),
-            steps = range.last - range.first - 1
+            steps = ((range.last - range.first) / range.step) - 1
         )
         Text("$value", modifier = Modifier.align(Alignment.CenterHorizontally))
     }
