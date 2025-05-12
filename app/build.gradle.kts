@@ -1,6 +1,7 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
+import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -106,13 +107,28 @@ tasks.withType<DetektCreateBaselineTask>().configureEach {
 }
 
 tasks.dokkaHtml {
-    outputDirectory.set(layout.buildDirectory.dir("dokka")) // output directory of dokka documentation.
-    // source set configuration.
-    dokkaSourceSets {
-        named("main") { // source set name.
-            jdkVersion.set(java.targetCompatibility.toString().toInt()) // Used for linking to JDK documentation
-            skipDeprecated.set(false)
-            includeNonPublic.set(true) // non-public modifiers should be documented
+}
+
+
+dokka {
+    dokkaSourceSets.main {
+        jdkVersion.set(java.targetCompatibility.toString().toInt()) // Used for linking to JDK documentation
+        skipDeprecated.set(false)
+    }
+
+    pluginsConfiguration.html {
+        dokkaSourceSets {
+            configureEach {
+                documentedVisibilities.set(
+                    setOf(
+                        VisibilityModifier.Public,
+                        VisibilityModifier.Private,
+                        VisibilityModifier.Protected,
+                        VisibilityModifier.Internal,
+                        VisibilityModifier.Package,
+                    )
+                )
+            }
         }
     }
 }
