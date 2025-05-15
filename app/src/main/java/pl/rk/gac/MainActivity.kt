@@ -1,4 +1,4 @@
-package pl.rk.gac.enums
+package pl.rk.gac
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,10 +8,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import pl.rk.gac.enums.enums.DisplayMode
-import pl.rk.gac.enums.ui.PericopeScreen
-import pl.rk.gac.enums.ui.theme.GospelACasoTheme
-import pl.rk.gac.enums.viewmodel.PericopeViewModel
+import pl.rk.gac.enums.DisplayMode
+import pl.rk.gac.ui.PericopeScreen
+import pl.rk.gac.ui.theme.GospelACasoTheme
+import pl.rk.gac.viewmodel.PericopeViewModel
 
 /**
  * MainActivity.kt

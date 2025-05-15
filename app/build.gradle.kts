@@ -106,10 +106,6 @@ tasks.withType<DetektCreateBaselineTask>().configureEach {
     jvmTarget = JvmTarget.JVM_21.target
 }
 
-tasks.dokkaHtml {
-}
-
-
 dokka {
     dokkaSourceSets.main {
         jdkVersion.set(java.targetCompatibility.toString().toInt()) // Used for linking to JDK documentation

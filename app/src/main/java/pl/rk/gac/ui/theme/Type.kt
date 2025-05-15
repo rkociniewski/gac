@@ -1,4 +1,4 @@
-package pl.rk.gac.enums.ui.theme
+package pl.rk.gac.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

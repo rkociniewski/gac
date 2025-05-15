@@ -18,12 +18,14 @@ jobs:
   pr-comments:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      -
+        name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Comment PR based on target branch
+      -
+        name: Comment PR based on target branch
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
