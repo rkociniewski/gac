@@ -1,4 +1,4 @@
-package pl.rk.gac.enums.ui.config
+package pl.rk.gac.ui.config
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,12 +30,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import pl.rk.gac.enums.enums.DisplayMode
-import pl.rk.gac.enums.enums.DisplayText
-import pl.rk.gac.enums.enums.DrawMode
-import pl.rk.gac.enums.model.Config
+import pl.rk.gac.enums.AdditionalMode
+import pl.rk.gac.enums.DisplayMode
+import pl.rk.gac.enums.DisplayText
+import pl.rk.gac.enums.DrawMode
+import pl.rk.gac.model.Config
 import rk.gac.R
-import rk.gac.enums.AdditionalMode
 import kotlin.enums.EnumEntries
 
 /**
@@ -69,7 +69,7 @@ fun ConfigSection(
             stringResource(R.string.tooltip_word_threshold)
         )
         @Suppress("MagicNumber")
-        ConfigSlider(config.wordThreshold,  (20..100 step 10)) {
+        ConfigSlider(config.wordThreshold, (20..100 step 10)) {
             updateConfig(config.copy(wordThreshold = it))
         }
     }
@@ -140,20 +140,13 @@ fun HelpLabel(label: String, tooltip: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(label, style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.width(4.dp))
-        TooltipBox(
-            positionProvider = rememberPlainTooltipPositionProvider(),
-            tooltip = {
+        TooltipBox(positionProvider = rememberPlainTooltipPositionProvider(), tooltip = {
                 PlainTooltip {
                     Text(tooltip)
                 }
-            },
-            state = tooltipState,
-        ) {
+            }, state = tooltipState,) {
             Icon(
-                imageVector = Icons.Outlined.Info,
-                contentDescription = stringResource(R.string.tooltip_icon_description),
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
+                Icons.Outlined.Info, stringResource(R.string.tooltip_icon_description), Modifier
                     .padding(4.dp)
                     .clickable {
                         scope.launch {
@@ -163,7 +156,7 @@ fun HelpLabel(label: String, tooltip: String) {
                                 tooltipState.dismiss()
                             }
                         }
-                    }
+                    }, MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -208,7 +201,7 @@ fun <T> ModeSelector(
  * @param onValueChange Callback invoked when the slider value changes
  */
 @Composable
-fun ConfigSlider(value: Int, range: IntProgression = 0..2 step 1, onValueChange: (Int) -> Unit){
+fun ConfigSlider(value: Int, range: IntProgression = 0..2 step 1, onValueChange: (Int) -> Unit) {
     Column {
         Slider(
             value = value.toFloat(),

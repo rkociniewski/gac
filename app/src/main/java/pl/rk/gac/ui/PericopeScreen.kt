@@ -1,4 +1,4 @@
-package pl.rk.gac.enums.ui
+package pl.rk.gac.ui
 
 import android.content.Context
 import android.util.Log
@@ -43,13 +43,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import pl.rk.gac.enums.enums.DrawMode
-import pl.rk.gac.enums.model.Config
-import pl.rk.gac.enums.model.Pericope
-import pl.rk.gac.enums.ui.config.ConfigSection
+import pl.rk.gac.enums.AdditionalMode
+import pl.rk.gac.enums.DrawMode
+import pl.rk.gac.model.Config
+import pl.rk.gac.model.Pericope
+import pl.rk.gac.ui.config.ConfigSection
+import pl.rk.gac.viewmodel.PericopeViewModel
 import rk.gac.R
-import rk.gac.enums.AdditionalMode
-import pl.rk.gac.enums.viewmodel.PericopeViewModel
 
 /**
  * Main screen composable for displaying pericopes (Gospel passages).
@@ -105,9 +105,9 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
         ConfigDialog(
             initialConfig = initialConfig,
             currentConfig = currentConfig,
-            onConfigUpdate = { newConfig ->
-                currentConfig = newConfig
-                viewModel.updateConfig(newConfig)
+            onConfigUpdate = {
+                currentConfig = it
+                viewModel.updateConfig(it)
             },
             onDismiss = {
                 showConfigDialog = false
@@ -255,7 +255,7 @@ private fun PericopeTopAppBar(
             IconButton(onClick = onConfigClick) {
                 Icon(
                     Icons.Outlined.Settings,
-                    contentDescription = stringResource(R.string.draw),
+                    contentDescription = stringResource(R.string.settings),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }

@@ -1,4 +1,4 @@
-package pl.rk.gac.enums.storage
+package pl.rk.gac.storage
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
@@ -7,10 +7,10 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import pl.rk.gac.enums.enums.DisplayMode
-import pl.rk.gac.enums.enums.DrawMode
-import pl.rk.gac.enums.model.Config
-import rk.gac.enums.AdditionalMode
+import pl.rk.gac.enums.AdditionalMode
+import pl.rk.gac.enums.DisplayMode
+import pl.rk.gac.enums.DrawMode
+import pl.rk.gac.model.Config
 
 /**
  * Manages configuration data persistence using Jetpack DataStore preferences.
@@ -35,14 +35,14 @@ object ConfigStore {
     fun read(context: Context): Flow<Config> {
         return context.dataStore.data.map { prefs ->
             Config(
-                additionalMode = AdditionalMode.valueOf(prefs[ADDITIONAL_MODE] ?: "NO"),
+                additionalMode = AdditionalMode.valueOf(prefs[ADDITIONAL_MODE] ?: AdditionalMode.NO.name),
                 wordThreshold = prefs[WORD_THRESHOLD] ?: 50,
                 prevCount = prefs[PREV_COUNT] ?: 1,
                 nextCount = prefs[NEXT_COUNT] ?: 1,
                 startFallback = prefs[START_FALLBACK] ?: 1,
                 endFallback = prefs[END_FALLBACK] ?: 1,
-                displayMode = DisplayMode.valueOf(prefs[DISPLAY_MODE] ?: "SYSTEM"),
-                drawMode = DrawMode.valueOf(prefs[DRAW_MODE] ?: "BUTTON")
+                displayMode = DisplayMode.valueOf(prefs[DISPLAY_MODE] ?: DisplayMode.LIGHT.name),
+                drawMode = DrawMode.valueOf(prefs[DRAW_MODE] ?: DrawMode.BUTTON.name)
             )
         }
     }

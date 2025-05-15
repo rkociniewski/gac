@@ -1,4 +1,4 @@
-package pl.rk.gac.enums.enums
+package pl.rk.gac.enums
 
 import androidx.annotation.StringRes
 import rk.gac.R

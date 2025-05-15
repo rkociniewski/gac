@@ -16,19 +16,22 @@ jobs:
     needs: android-build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      -
+        name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Get version from build.gradle
+      -
+        name: Get version from build.gradle
         id: get-version
         run: |
           VERSION=$(grep -o "versionName\s*=\s*[\"'][^\"']*[\"']" app/build.gradle | sed -E "s/versionName\s*=\s*[\"']([^\"']*)[\"']/\1/")
           echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
           echo "::set-output name=version::$VERSION"
 
-      - name: Create Git tag
+      -
+        name: Create Git tag
         run: |
           git tag -a "v${{ env.APP_VERSION }}" -m "Release v${{ env.APP_VERSION }}"
           git push origin "v${{ env.APP_VERSION }}"
