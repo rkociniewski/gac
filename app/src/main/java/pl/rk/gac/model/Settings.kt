@@ -3,6 +3,7 @@ package pl.rk.gac.model
 import pl.rk.gac.enums.AdditionalMode
 import pl.rk.gac.enums.DisplayMode
 import pl.rk.gac.enums.DrawMode
+import pl.rk.gac.util.Numbers
 
 /**
  * Configuration data class for the application settings.
@@ -19,9 +20,9 @@ import pl.rk.gac.enums.DrawMode
  * @property displayMode Controls the application's theme (light, dark, or system)
  * @property drawMode Determines how drawing interactions are triggered (button, rotation, or both)
  */
-data class Config(
+data class Settings(
     val additionalMode: AdditionalMode = AdditionalMode.NO, // Mode to drawn additional pericopes
-    val wordThreshold: Int = 50,                            // only when CONDITIONAL
+    val wordThreshold: Int = Numbers.WORD_THRESHOLD,                            // only when CONDITIONAL
     val prevCount: Int = 0,                                 // how many pericopes before drawn
     val nextCount: Int = 1,                                 // how many pericopes after drawn
     val startFallback: Int = 1,                             // if begin of Gospel

@@ -1,21 +1,19 @@
 package pl.rk.gac.viewmodel
 
-import android.app.Application
-import android.content.Context
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
+import pl.rk.gac.di.SettingsRepository
 import pl.rk.gac.enums.AdditionalMode
-import pl.rk.gac.model.Config
 import pl.rk.gac.model.Pericope
-import pl.rk.gac.storage.ConfigStore
-import rk.gac.R
-import java.io.InputStream
+import pl.rk.gac.model.Settings
+import pl.rk.gac.util.AppLogger
+import pl.rk.gac.util.LogTags
 
 /**
  * PericopeViewModel.kt
@@ -28,18 +26,18 @@ import java.io.InputStream
  * ViewModel for managing gospel pericopes and application configuration.
  * Responsible for loading pericopes from resources, selecting passages based on
  * configured rules, and maintaining application state.
- *
- * @param app The application instance
  */
-class PericopeViewModel(app: Application) : AndroidViewModel(app) {
-    /** Application context for resource access */
-    private val context: Context get() = getApplication()
+@HiltViewModel
+class PericopeViewModel @Inject constructor(
+    private val settingsRepository: SettingsRepository
+) : ViewModel() {
+    private val logger = AppLogger(this::class.simpleName ?: LogTags.PERICOPE_VIEW_MODEL)
 
     /** Mutable state flow for the current configuration */
-    private val _config = MutableStateFlow(Config())
+    private val _settings = MutableStateFlow(Settings())
 
     /** Public state flow exposing the current configuration */
-    val config: StateFlow<Config> = _config
+    val settings: StateFlow<Settings> = _settings
 
     /** Mutable state flow for the currently displayed pericopes */
     private val _pericopes = MutableStateFlow<List<Pericope>>(emptyList())
@@ -60,43 +58,32 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
     val error = MutableSharedFlow<String>()
 
     /**
-     * Loads pericopes from raw resources.
-     *
-     * @param context The application context
-     * @return List of pericopes parsed from the JSON resource file
-     */
-    private fun loadPericopesFromRaw(context: Context): List<Pericope> {
-        val inputStream: InputStream = context.resources.openRawResource(R.raw.pl_gospel)
-        val jsonString = inputStream.bufferedReader().use { it.readText() }
-        return Json.decodeFromString<List<Pericope>>(jsonString)
-    }
-
-    /**
      * Checks if a pericope belongs to a specific gospel.
      *
-     * @param p The pericope to check
-     * @param gp The gospel prefix (e.g., "mt", "mk")
+     * @param periscope The pericope to check
+     * @param gospel The gospel prefix (e.g., "mt", "mk")
      * @return True if the pericope belongs to the specified gospel, false otherwise
      */
-    private fun isSameGospel(p: Pericope?, gp: String): Boolean =
-        p?.id?.startsWith("${gp}_") == true
+    private fun isSameGospel(periscope: Pericope?, gospel: String) = periscope?.id?.startsWith("${gospel}_") == true
 
     /**
      * Initializes the ViewModel by loading the configuration and pericopes.
      */
     init {
         viewModelScope.launch {
-            // load persisted config
-            ConfigStore.read(context).collect { _config.value = it }
+            settingsRepository.settingsFlow.collect {
+                _settings.value = it
+            }
         }
 
         viewModelScope.launch {
-            val list = loadPericopesFromRaw(context)
+            val list = settingsRepository.loadPericopesFromRaw()
             allPericopes.clear()
             allPericopes.addAll(list)
             drawPericope()
         }
     }
+
 
     /**
      * Selects a pericope and determines which adjacent pericopes to display based on configuration.
@@ -111,12 +98,9 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
         val selectedPericope = allPericopes[selected]
         _selectedId.value = selectedPericope.id
 
-        Log.d(
-            "rk.gac",
-            "[DEBUG] ${context.getString(R.string.debug_drawn_pericope, selectedPericope.id)}"
-        )
+        logger.debug("Drawn pericope: ${selectedPericope.id}")
 
-        val config = _config.value
+        val settings = _settings.value
         val result = mutableListOf<Pericope>()
 
         // Determine the gospel prefix, e.g. "mt", "mk"
@@ -133,25 +117,25 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
         )
 
         val thresholdMet =
-            selectedPericope.text.trim().split("\\s+".toRegex()).size <= config.wordThreshold
+            selectedPericope.text.trim().split("\\s+".toRegex()).size <= settings.wordThreshold
 
-        val useAdditional = when (config.additionalMode) {
+        val useAdditional = when (settings.additionalMode) {
             AdditionalMode.YES -> true
             AdditionalMode.NO -> false
             AdditionalMode.CONDITIONAL -> thresholdMet
         }
 
         val prevCount = when {
-            useAdditional && isAtEnd -> config.endFallback
+            useAdditional && isAtEnd -> settings.endFallback
             useAdditional && isAtStart -> 0
-            useAdditional -> config.prevCount
+            useAdditional -> settings.prevCount
             else -> 0
         }
 
         val nextCount = when {
-            useAdditional && isAtStart -> config.startFallback
+            useAdditional && isAtStart -> settings.startFallback
             useAdditional && isAtEnd -> 0
-            useAdditional -> config.nextCount
+            useAdditional -> settings.nextCount
             else -> 0
         }
 
@@ -168,14 +152,19 @@ class PericopeViewModel(app: Application) : AndroidViewModel(app) {
     /**
      * Updates the application configuration and persists the changes.
      *
-     * @param newConfig The new configuration to apply
+     * @param settings The new configuration to apply
      */
-    fun updateConfig(newConfig: Config) {
-        Log.d("rk.gac", "[DEBUG] ${context.getString(R.string.debug_config_updated, newConfig)}")
-
-        _config.value = newConfig
+    fun updateSettings(settings: Settings) {
         viewModelScope.launch {
-            ConfigStore.write(context, newConfig)
+            val writeSuccess = settingsRepository.updateSettings(settings)
+
+            if (writeSuccess) {
+                _settings.value = settings
+
+                logger.debug("Settings updated: $settings")
+            } else {
+                logger.error("Failed to persist settings")
+            }
         }
     }
 }

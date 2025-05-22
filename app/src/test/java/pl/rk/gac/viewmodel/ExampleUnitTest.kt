@@ -1,4 +1,4 @@
-package rk.gac
+package pl.rk.gac.viewmodel
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

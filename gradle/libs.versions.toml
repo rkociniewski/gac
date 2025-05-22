@@ -1,24 +1,28 @@
 [versions]
 activityCompose = "1.10.1"
 agp = "8.10.0"
-composeBom = "2025.05.00"
+composeBom = "2025.05.01"
 coreKtx = "1.16.0"
 coroutines = "1.10.2"
-datastore = "1.1.6"
+datastore = "1.1.7"
 detekt = "1.23.8"
+dokka = "2.0.0"
 espressoCore = "3.6.1"
+hilt = "2.56.2"
+hiltNavigationCompose = "1.2.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-kotlin = "2.1.20"
+kotlin = "2.1.21"
+ksp = "2.1.21-2.0.1"
 lifecycle = "2.9.0"
 lifecycleRuntimeKtx = "2.9.0"
 manes = "0.52.0"
 mockk = "1.14.2"
 serialization = "1.8.1"
-dokka = "2.0.0"
 test-logger = "4.0.0"
 
 [libraries]
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,6 +46,8 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 mockk-agent = { module = "io.mockk:mockk-agent", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -52,3 +58,5 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 manes = { id = "com.github.ben-manes.versions", version.ref = "manes" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 test-logger = { id = "com.adarshr.test-logger", version.ref = "test-logger" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

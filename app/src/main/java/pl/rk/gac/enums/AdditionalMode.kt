@@ -1,7 +1,7 @@
 package pl.rk.gac.enums
 
 import androidx.annotation.StringRes
-import rk.gac.R
+import pl.rk.gac.R
 
 /**
  * Enum representing additional mode options for the application.

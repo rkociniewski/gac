@@ -13,16 +13,18 @@ plugins {
     alias(libs.plugins.manes)
     alias(libs.plugins.dokka)
     alias(libs.plugins.test.logger)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
-    namespace = "rk.gac"
-    compileSdk = 35
+    namespace = "pl.rk.gac"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "rk.gac"
+        applicationId = "pl.rk.gac"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -60,9 +62,11 @@ android {
 
 dependencies {
     detektPlugins(libs.detekt)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.material.icons.extended)
@@ -71,17 +75,18 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.coroutines.core)
+    implementation(libs.hilt.android)
     implementation(libs.kotlinx.serialization.json)
     implementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.mockk.agent)
-    testImplementation(libs.mockk.android)
+    androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.mockk.agent)
+    testImplementation(libs.mockk.android)
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.androidx.ui.tooling)
     testImplementation(libs.coroutines.test)
@@ -129,9 +134,8 @@ dokka {
     }
 }
 
-private fun isNonStable(version: String): Boolean {
-    return listOf("alpha", "beta", "rc", "cr", "m", "preview", "snapshot", "dev")
-        .any { version.lowercase().contains(it) }
+hilt {
+    enableAggregatingTask = false
 }
 
 testlogger {
@@ -140,4 +144,9 @@ testlogger {
     showCauses = false
     slowThreshold = 10000
     showSimpleNames = true
+}
+
+private fun isNonStable(version: String): Boolean {
+    return listOf("alpha", "beta", "rc", "cr", "m", "preview", "snapshot", "dev")
+        .any { version.lowercase().contains(it) }
 }

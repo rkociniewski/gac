@@ -1,23 +1,21 @@
-package rk.gac.viewmodel
+package pl.rk.gac.viewmodel
 
-import android.app.Application
 import android.util.Log
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import pl.rk.gac.di.SettingsRepository
 import pl.rk.gac.enums.AdditionalMode
-import pl.rk.gac.model.Config
 import pl.rk.gac.model.Pericope
-import pl.rk.gac.viewmodel.PericopeViewModel
+import pl.rk.gac.model.Settings
 
 class PericopeViewModelTest {
-    private val mockApp = mockk<Application>(relaxed = true)
+    private val settingsRepository = mockk<SettingsRepository>(relaxed = true)
     private lateinit var vm: PericopeViewModel
 
     @Before
@@ -27,7 +25,7 @@ class PericopeViewModelTest {
         every { Log.d(any(), any()) } returns 0
         every { Log.d(any(), any(), any()) } returns 0
 
-        vm = PericopeViewModel(mockApp).apply {
+        vm = PericopeViewModel(settingsRepository).apply {
             allPericopes.clear()
             allPericopes.addAll(
                 listOf(
@@ -43,70 +41,70 @@ class PericopeViewModelTest {
     }
 
     @Test
-    fun test_config_update() = runTest {
-        val config = Config(AdditionalMode.YES, prevCount = 1, nextCount = 1)
-        vm.updateConfig(config)
-        assertEquals(config, vm.config.first())
+    fun test_settings_update() = runTest {
+        val settings = Settings(AdditionalMode.YES, prevCount = 1, nextCount = 1)
+        vm.updateSettings(settings)
+        Assert.assertEquals(settings, vm.settings.first())
     }
 
     @Test
     fun test_draw_basic_mode() = runTest {
-        vm.updateConfig(Config(AdditionalMode.NO))
+        vm.updateSettings(Settings(AdditionalMode.NO))
         vm.drawPericope()
-        assertEquals(1, vm.pericopes.value.size)
+        Assert.assertEquals(1, vm.pericopes.value.size)
     }
 
     @Test
     fun test_draw_yes_mode_with_context() = runTest {
-        vm.updateConfig(Config(AdditionalMode.YES, prevCount = 1, nextCount = 1))
+        vm.updateSettings(Settings(AdditionalMode.YES, prevCount = 1, nextCount = 1))
         vm.drawPericope()
-        assertTrue(vm.pericopes.value.size in 2..3)
+        Assert.assertTrue(vm.pericopes.value.size in 2..3)
     }
 
     @Test
     fun test_draw_conditional_word_threshold() = runTest {
-        vm.updateConfig(
-            Config(
+        vm.updateSettings(
+            Settings(
                 AdditionalMode.CONDITIONAL, 10, 1, 1
             )
         )
         vm.drawPericope()
-        assertTrue(vm.pericopes.value.size > 1)
+        Assert.assertTrue(vm.pericopes.value.size > 1)
     }
 
     @Test
     fun test_draw_conditional_word_threshold_above_limit() = runTest {
-        vm.updateConfig(
-            Config(AdditionalMode.CONDITIONAL, 3, 1, 1, 0, 0)
+        vm.updateSettings(
+            Settings(AdditionalMode.CONDITIONAL, 3, 1, 1, 0, 0)
         )
         vm.drawPericope(1)
 
-        assertEquals(1, vm.pericopes.value.size)
+        Assert.assertEquals(1, vm.pericopes.value.size)
     }
 
     @Test
     fun test_draw_yes_with_start_fallback() = runTest {
-        vm.updateConfig(
-            Config(
+        vm.updateSettings(
+            Settings(
                 AdditionalMode.YES, 3, 1, 1, 1, 0
             )
         )
 
         vm.drawPericope(forcedIndex = 0)
 
-        assertEquals(2, vm.pericopes.value.size)
+        Assert.assertEquals(2, vm.pericopes.value.size)
     }
 
     @Test
     fun test_draw_yes_with_end_fallback() = runTest {
-        vm.updateConfig(
-            Config(
+        vm.updateSettings(
+            Settings(
                 AdditionalMode.YES, 3, 1, 1, 0, 1
             )
         )
 
         vm.drawPericope(vm.allPericopes.lastIndex)
 
-        assertEquals(2, vm.pericopes.value.size)
+        Assert.assertEquals(2, vm.pericopes.value.size)
     }
 }

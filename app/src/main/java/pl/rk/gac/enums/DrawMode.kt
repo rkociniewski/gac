@@ -1,7 +1,7 @@
 package pl.rk.gac.enums
 
 import androidx.annotation.StringRes
-import rk.gac.R
+import pl.rk.gac.R
 
 /**
  * Enum representing drawing interaction modes in the application.

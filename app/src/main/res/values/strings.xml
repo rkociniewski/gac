@@ -3,7 +3,9 @@
     <string name="draw">Losuj</string>
     <string name="draw_button">Wylosuj perykopę</string>
     <string name="close">Zamknij</string>
+
     <string name="error_no_additional">Ustaw co najmniej 1 perykopę przed lub po.</string>
+
     <string name="settings">Ustawienia</string>
     <string name="section_additional_mode">Tryb dodatkowych perykop</string>
     <string name="section_display_mode">Tryb wyświetlania</string>

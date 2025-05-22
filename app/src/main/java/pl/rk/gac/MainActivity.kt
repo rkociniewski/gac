@@ -4,13 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel
-import pl.rk.gac.enums.DisplayMode
-import pl.rk.gac.ui.PericopeScreen
+import androidx.hilt.navigation.compose.hiltViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import pl.rk.gac.ui.pericope.PericopeScreen
 import pl.rk.gac.ui.theme.GospelACasoTheme
+import pl.rk.gac.ui.util.isDarkTheme
 import pl.rk.gac.viewmodel.PericopeViewModel
 
 /**
@@ -24,6 +24,7 @@ import pl.rk.gac.viewmodel.PericopeViewModel
  * Main activity that initializes the application UI.
  * Sets up the theme based on user preferences and displays the pericope screen.
  */
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     /**
      * Sets up the activity with appropriate theme and content.
@@ -34,15 +35,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
-            val viewModel: PericopeViewModel = viewModel()
-            val config by viewModel.config.collectAsState()
 
-            val darkTheme = when (config.displayMode) {
-                DisplayMode.SYSTEM -> isSystemInDarkTheme()
-                DisplayMode.DARK -> true
-                DisplayMode.LIGHT -> false
-            }
+        setContent {
+            val viewModel: PericopeViewModel = hiltViewModel()
+            val settings by viewModel.settings.collectAsState()
+
+            val darkTheme = settings.displayMode.isDarkTheme()
 
             GospelACasoTheme(darkTheme) {
                 PericopeScreen(viewModel)
