@@ -17,8 +17,10 @@ import pl.rk.gac.R
 import pl.rk.gac.enums.AdditionalMode
 import pl.rk.gac.enums.DisplayMode
 import pl.rk.gac.enums.DrawMode
+import pl.rk.gac.enums.Language
 import pl.rk.gac.model.Settings
 import pl.rk.gac.ui.util.HelpLabel
+import pl.rk.gac.ui.util.LanguageSelector
 import pl.rk.gac.ui.util.ModeSelector
 import pl.rk.gac.ui.util.SettingsSlider
 import pl.rk.gac.util.Dimensions
@@ -45,7 +47,15 @@ fun SettingsScreen(
         Arrangement.Center,
         Alignment.CenterHorizontally
     ) {
-        // Additional mode pericopes
+        HelpLabel(
+            stringResource(R.string.settings_label_language),
+            stringResource(R.string.tooltip_language)
+
+        )
+        LanguageSelector(Language.entries, settings.language) {
+            updateSettings(settings.copy(language = it))
+        }
+
         HelpLabel(
             stringResource(R.string.section_additional_mode),
             stringResource(R.string.tooltip_additional_mode)

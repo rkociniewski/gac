@@ -49,7 +49,10 @@ private val logger = AppLogger(LogTags.PERICOPE_SCREEN)
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PericopeScreen(viewModel: PericopeViewModel) {
+fun PericopeScreen(
+    viewModel: PericopeViewModel,
+    localizedContext: Context
+) {
     val context = LocalContext.current
     val settings by viewModel.settings.collectAsState()
     val pericopes by viewModel.pericopes.collectAsState()
@@ -90,7 +93,8 @@ fun PericopeScreen(viewModel: PericopeViewModel) {
                 showSettingsDialog = false
                 viewModel.updateSettings(settings)
                 viewModel.drawPericope()
-            }
+            },
+            localizedContext = localizedContext
         )
     }
 }

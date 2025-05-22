@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">Gospel A Caso</string>
+    <string name="draw">Randomize</string>
+    <string name="draw_button">Draw a pericope</string>
+    <string name="close">Close</string>
+
+    <string name="error_no_additional">Set at least 1 pericope before or after.</string>
+    <string name="debug_cant_drawn">Cannot draw:</string>
+
+    <string name="settings">Settings</string>
+    <string name="settings_label_language">Language</string>
+
+    <string name="section_additional_mode">Additional pericope mode</string>
+    <string name="section_display_mode">Display mode</string>
+    <string name="section_draw_mode">Randomize mode</string>
+
+    <string name="draw_mode_button">Button</string>
+    <string name="draw_mode_rotation">Rotation</string>
+    <string name="draw_mode_both">Both</string>
+
+    <string name="display_mode_light">Light</string>
+    <string name="display_mode_dark">Dark</string>
+    <string name="display_mode_system">System</string>
+
+    <string name="additional_mode_yes">Yes</string>
+    <string name="additional_mode_no">No</string>
+    <string name="additional_mode_conditional">Conditional</string>
+
+    <string name="label_word_threshold">Word threshold</string>
+    <string name="label_prev">Previous pericopes</string>
+    <string name="label_next">Next pericopes</string>
+    <string name="label_start_fallback">When the beginning of the Gospel…</string>
+    <string name="label_end_fallback">When the end of the Gospel…</string>
+
+    <string name="tooltip_additional_mode">Determines whether and when to add additional pericopes before and after the randomly selected fragment.</string>
+    <string name="tooltip_word_threshold">If the number of words in the pericope is less than the threshold, adjacent pericopes are added.</string>
+    <string name="tooltip_prev">How many pericopes before the selected one should be included if the condition is met.</string>
+    <string name="tooltip_next">How many pericopes after the selected one should be included if the condition is met condition.</string>
+    <string name="tooltip_start_fallback">When the pericope is at the beginning of the Gospel, how many more to include.</string>
+    <string name="tooltip_end_fallback">When the pericope is at the end of the Gospel, how many previous ones to include.</string>
+    <string name="tooltip_display_mode">Change the application display: light, dark or system.</string>
+    <string name="tooltip_draw_mode">Defines how a new pericope is drawn: by button, rotation or both.</string>
+    <string name="tooltip_icon_description">Show setting description</string>
+    <string name="tooltip_language">Select application language</string>
+</resources>

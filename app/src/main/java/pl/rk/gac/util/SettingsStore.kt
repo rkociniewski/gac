@@ -12,6 +12,7 @@ import pl.rk.gac.enums.AdditionalMode
 import pl.rk.gac.enums.DisplayMode
 import pl.rk.gac.enums.DrawMode
 import pl.rk.gac.model.Settings
+import pl.rk.gac.model.resolveDefaultLanguage
 
 /**
  * Manages configuration data persistence using Jetpack DataStore preferences.
@@ -26,6 +27,7 @@ private val Context.dataStore by preferencesDataStore("settings")
 object SettingsStore {
     private val logger = AppLogger(this::class.simpleName ?: LogTags.SETTINGS_STORE)
 
+    private val LANGUAGE = stringPreferencesKey("language")
     private val ADDITIONAL_MODE = stringPreferencesKey("additional_mode")
     private val WORD_THRESHOLD = intPreferencesKey("word_threshold")
     private val PREV_COUNT = intPreferencesKey("prev_count")
@@ -46,6 +48,7 @@ object SettingsStore {
                 it[END_FALLBACK] ?: 1,
                 safeEnumValueOf(it[DISPLAY_MODE], DisplayMode.LIGHT),
                 safeEnumValueOf(it[DRAW_MODE], DrawMode.BUTTON),
+                safeEnumValueOf(it[LANGUAGE], resolveDefaultLanguage()),
             )
             logger.debug("Loaded settings: $settings")
             settings
@@ -66,6 +69,7 @@ object SettingsStore {
             it[END_FALLBACK] = settings.endFallback
             it[DISPLAY_MODE] = settings.displayMode.name
             it[DRAW_MODE] = settings.drawMode.name
+            it[LANGUAGE] = settings.language.name
         }
         true
     } catch (e: Exception) {

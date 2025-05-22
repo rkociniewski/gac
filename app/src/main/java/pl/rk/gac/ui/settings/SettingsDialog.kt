@@ -1,5 +1,6 @@
 package pl.rk.gac.ui.settings
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,7 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -34,11 +37,12 @@ fun SettingsDialog(
     settings: Settings,
     onSettingsUpdate: (Settings) -> Unit,
     onDismiss: () -> Unit,
+    localizedContext: Context,
 ) {
     Dialog(onDismiss, DialogProperties(usePlatformDefaultWidth = false)) {
         Surface(
             Modifier
-                .fillMaxWidth(Dimensions.SCREEN_MARGI)
+                .fillMaxWidth(Dimensions.SCREEN_MARGIN)
                 .padding(Dimensions.dialogPadding),
             MaterialTheme.shapes.medium,
             tonalElevation = Dimensions.height
@@ -49,12 +53,14 @@ fun SettingsDialog(
                     .verticalScroll(rememberScrollState()),
                 Arrangement.spacedBy(Dimensions.itemSpacing)
             ) {
-                SettingsScreen(settings, onSettingsUpdate, onDismiss)
+                CompositionLocalProvider(LocalContext provides localizedContext) {
+                    SettingsScreen(settings, onSettingsUpdate, onDismiss)
 
-                if (settings.additionalMode != AdditionalMode.NO &&
-                    settings.prevCount == 0 && settings.nextCount == 0
-                ) {
-                    SettingsErrorMessage()
+                    if (settings.additionalMode != AdditionalMode.NO &&
+                        settings.prevCount == 0 && settings.nextCount == 0
+                    ) {
+                        SettingsErrorMessage()
+                    }
                 }
             }
         }

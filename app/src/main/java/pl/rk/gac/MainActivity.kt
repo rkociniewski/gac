@@ -4,13 +4,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import pl.rk.gac.ui.pericope.PericopeScreen
 import pl.rk.gac.ui.theme.GospelACasoTheme
 import pl.rk.gac.ui.util.isDarkTheme
+import pl.rk.gac.ui.util.rememberLocalizedContext
 import pl.rk.gac.viewmodel.PericopeViewModel
 
 /**
@@ -42,8 +45,11 @@ class MainActivity : ComponentActivity() {
 
             val darkTheme = settings.displayMode.isDarkTheme()
 
-            GospelACasoTheme(darkTheme) {
-                PericopeScreen(viewModel)
+            val localizedContext = rememberLocalizedContext(settings.language.name.lowercase())
+            CompositionLocalProvider(LocalContext provides localizedContext) {
+                GospelACasoTheme(darkTheme) {
+                    PericopeScreen(viewModel, localizedContext)
+                }
             }
         }
     }

@@ -72,18 +72,18 @@ class PericopeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             settingsRepository.settingsFlow.collect {
+                val shouldReload = _settings.value.language != it.language
                 _settings.value = it
+
+                if (shouldReload || allPericopes.isEmpty()) {
+                    val list = settingsRepository.loadPericopesFromRaw(it.language)
+                    allPericopes.clear()
+                    allPericopes.addAll(list)
+                    drawPericope()
+                }
             }
         }
-
-        viewModelScope.launch {
-            val list = settingsRepository.loadPericopesFromRaw()
-            allPericopes.clear()
-            allPericopes.addAll(list)
-            drawPericope()
-        }
     }
-
 
     /**
      * Selects a pericope and determines which adjacent pericopes to display based on configuration.

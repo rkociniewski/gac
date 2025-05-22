@@ -1,17 +1,29 @@
 package pl.rk.gac.ui.util
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.Configuration
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
@@ -21,15 +33,22 @@ import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults.rememberPlainTooltipPositionProvider
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.launch
 import pl.rk.gac.R
 import pl.rk.gac.enums.DisplayMode
 import pl.rk.gac.enums.DisplayText
+import pl.rk.gac.enums.Language
 import pl.rk.gac.util.Dimensions
+import java.util.Locale
 import kotlin.enums.EnumEntries
 
 @Composable
@@ -131,5 +150,74 @@ fun HelpLabel(label: String, tooltip: String) {
                     }, MaterialTheme.colorScheme.primary
             )
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@Composable
+fun LanguageSelector(
+    options: EnumEntries<Language>,
+    selected: Language,
+    onSelect: (Language) -> Unit
+) {
+    LazyVerticalGrid(
+        GridCells.Adaptive(minSize = Dimensions.adaptiveMinSize), Modifier
+            .fillMaxWidth()
+            .heightIn(max = Dimensions.maxHeightIn),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.height),
+        horizontalArrangement = Arrangement.spacedBy(Dimensions.height)
+    ) {
+        items(options.size) {
+            val opt = options[it]
+
+            FilterChip(
+                selected == opt, { onSelect(opt) }, {
+                    TooltipBox(
+                        rememberPlainTooltipPositionProvider(),
+                        { Text(stringResource(opt.label)) },
+                        rememberTooltipState()
+                    ) {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = Dimensions.minHeight),
+                            Alignment.Center
+                        ) {
+                            Icon(
+                                painterResource(opt.flagIcon),
+                                stringResource(opt.label),
+                                Modifier.size(Dimensions.size),
+                                Color.Unspecified
+                            )
+                        }
+                    }
+                }, colors = FilterChipDefaults.filterChipColors(
+                    MaterialTheme.colorScheme.surfaceVariant,
+                    MaterialTheme.colorScheme.onSurface,
+                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ),
+                border = null,
+                shape = RoundedCornerShape(Dimensions.dialogPadding)
+            )
+        }
+    }
+}
+
+@Composable
+fun rememberLocalizedContext(languageCode: String): Context {
+    val baseContext = LocalContext.current
+    val localConfiguration = LocalConfiguration.current
+    return remember(languageCode) {
+        val locale = Locale.Builder()
+            .setLanguage(languageCode)
+            .build()
+
+        Locale.setDefault(locale)
+
+        val config = Configuration(localConfiguration)
+        config.setLocale(locale)
+
+        baseContext.createConfigurationContext(config)
     }
 }

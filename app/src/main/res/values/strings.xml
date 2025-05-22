@@ -1,36 +1,37 @@
 <resources>
-    <string name="app_name">Gospel A Caso</string>
+    <string name="app_name">Ewangelia a caso</string>
     <string name="draw">Losuj</string>
     <string name="draw_button">Wylosuj perykopę</string>
     <string name="close">Zamknij</string>
 
     <string name="error_no_additional">Ustaw co najmniej 1 perykopę przed lub po.</string>
+    <string name="debug_cant_drawn">Nie można losować:</string>
 
     <string name="settings">Ustawienia</string>
+    <string name="settings_label_language">Język</string>
+
     <string name="section_additional_mode">Tryb dodatkowych perykop</string>
     <string name="section_display_mode">Tryb wyświetlania</string>
+    <string name="section_draw_mode">Tryb losowania</string>
+
     <string name="draw_mode_button">Przycisk</string>
     <string name="draw_mode_rotation">Obrót</string>
     <string name="draw_mode_both">Oba</string>
+
     <string name="display_mode_light">Jasny</string>
     <string name="display_mode_dark">Ciemny</string>
     <string name="display_mode_system">System</string>
+
     <string name="additional_mode_yes">Tak</string>
     <string name="additional_mode_no">Nie</string>
     <string name="additional_mode_conditional">Warunkowo</string>
-    <string name="section_draw_mode">Tryb losowania</string>
+
     <string name="label_word_threshold">Próg słów</string>
     <string name="label_prev">Poprzednie perykopy</string>
     <string name="label_next">Następne perykopy</string>
     <string name="label_start_fallback">Gdy początek Ewangeli…</string>
     <string name="label_end_fallback">Gdy koniec Ewangeli…</string>
-    <string name="debug_cant_drawn">Nie można losować:</string>
-    <string name="debug_config_updated">Konfiguracja zaktualizowana: %1$s</string>
-    <string name="debug_shuffle_clicked">Ikona shuffle została kliknięta</string>
-    <string name="debug_drawn_pericope">Wylosowana perykopa: %1$s</string>
-    <string name="debug_initial_drawn_pericope">Inicjalne losowanie perykopy</string>
-    <string name="debug_drawn_pericope_orientation">Wywołuję drawPericope() po zmianie orientacji</string>
-    <string name="debug_drawn_changed_orientation">Orientacja zmieniona: %1$d, poprzednia: : %2$d</string>
+
     <string name="tooltip_additional_mode">Określa, czy i kiedy dodawać dodatkowe perykopy przed i po wylosowanym fragmencie.</string>
     <string name="tooltip_word_threshold">Jeśli liczba słów w perykopie jest mniejsza niż próg, dodawane są perykopy sąsiednie.</string>
     <string name="tooltip_prev">Ile perykop przed wybraną należy dołączyć, jeśli spełniony warunek.</string>
@@ -40,4 +41,8 @@
     <string name="tooltip_display_mode">Zmień sposób wyświetlania aplikacji: jasny, ciemny lub systemowy.</string>
     <string name="tooltip_draw_mode">Określa, w jaki sposób losowana jest nowa perykopa: przyciskiem, obrotem lub oba.</string>
     <string name="tooltip_icon_description">Pokaż opis ustawienia</string>
+    <string name="tooltip_language">Wybierz język aplikacji</string>
+
+    <string name="lang_pl" translatable="false">Polski</string>
+    <string name="lang_en" translatable="false">English</string>
 </resources>
