@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name">Gospel A Caso</string>
     <string name="draw">Randomize</string>
-    <string name="draw_button">Draw a pericope</string>
     <string name="close">Close</string>
 
-    <string name="error_no_additional">Set at least 1 pericope before or after.</string>
+    <string name="error_no_additional">Set at least one pericope before or after.</string>
     <string name="debug_cant_drawn">Cannot draw:</string>
 
     <string name="settings">Settings</string>
@@ -33,7 +32,7 @@
     <string name="label_end_fallback">When the end of the Gospel…</string>
 
     <string name="tooltip_additional_mode">Determines whether and when to add additional pericopes before and after the randomly selected fragment.</string>
-    <string name="tooltip_word_threshold">If the number of words in the pericope is less than the threshold, adjacent pericopes are added.</string>
+    <string name="tooltip_word_threshold">If the number of words in the pericope is lower than the threshold, adjacent pericopes are added.</string>
     <string name="tooltip_prev">How many pericopes before the selected one should be included if the condition is met.</string>
     <string name="tooltip_next">How many pericopes after the selected one should be included if the condition is met condition.</string>
     <string name="tooltip_start_fallback">When the pericope is at the beginning of the Gospel, how many more to include.</string>

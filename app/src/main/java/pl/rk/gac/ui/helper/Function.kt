@@ -1,9 +1,7 @@
-package pl.rk.gac.ui.util
+package pl.rk.gac.ui.helper
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -153,7 +151,7 @@ fun HelpLabel(label: String, tooltip: String) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LanguageSelector(
     options: EnumEntries<Language>,

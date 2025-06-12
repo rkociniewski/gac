@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.view.WindowManager
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -20,7 +19,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -51,13 +49,11 @@ private val logger = AppLogger(LogTags.PERICOPE_SCREEN)
  *
  * @param viewModel The ViewModel that provides data and handles business logic for this screen
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PericopeScreen(
     viewModel: PericopeViewModel,
     localizedContext: Context
 ) {
-    val context = LocalContext.current
     val settings by viewModel.settings.collectAsState()
     val pericopes by viewModel.pericopes.collectAsState()
     val selectedId by viewModel.selectedId.collectAsState()
@@ -75,7 +71,6 @@ fun PericopeScreen(
         }
     }
 
-
     HandleOrientationChange(viewModel, settings)
     InitialSetupAndErrorHandling(viewModel, snackBarHostState)
 
@@ -85,16 +80,16 @@ fun PericopeScreen(
             PericopeTopAppBar(
                 settings = settings,
                 onDrawClick = {
-                    handleDrawClick(context, settings, viewModel, scope, snackBarHostState)
+                    handleDrawClick(localizedContext, settings, viewModel, scope, snackBarHostState)
                 },
                 onSettingsClick = { showSettingsDialog = true }
             )
         }
-    ) { padding ->
+    ) {
         PericopeContent(
             pericopes = pericopes,
             selectedId = selectedId,
-            modifier = Modifier.padding(padding)
+            modifier = Modifier.padding(it)
         )
     }
 
@@ -130,11 +125,11 @@ private fun HandleOrientationChange(viewModel: PericopeViewModel, settings: Sett
 
     LaunchedEffect(configuration.orientation) {
 
-        logger.debug("Orientantion has changed. Previous: $lastOrientation. Actual: ${configuration.orientation}")
+        logger.debug("Orientation has changed. Previous: $lastOrientation. Actual: ${configuration.orientation}")
         if ((settings.drawMode == DrawMode.ROTATION || settings.drawMode == DrawMode.BOTH) &&
             lastOrientation != configuration.orientation
         ) {
-            logger.debug("Executing drawPeriscope after change orientantion")
+            logger.debug("Executing drawPeriscope after change orientation")
             viewModel.drawPericope()
         }
         lastOrientation = configuration.orientation
@@ -145,7 +140,7 @@ private fun HandleOrientationChange(viewModel: PericopeViewModel, settings: Sett
  * Handles initial setup and error collection for the pericope screen.
  *
  * This composable performs the initial pericope draw when the screen launches and
- * sets up error collection from the ViewModel to display in snackbars.
+ * sets up an error collection from the ViewModel to display in snackbars.
  *
  * @param viewModel The ViewModel that provides pericopes and error information
  * @param snackBarHostState The host state for displaying snackbar messages
@@ -169,7 +164,7 @@ private fun InitialSetupAndErrorHandling(
  * Handles the draw button click event.
  *
  * This function validates the current configuration before drawing a new pericope.
- * If the configuration would result in no pericopes being displayed, it shows an error message.
+ * If the configuration results in no pericopes being displayed, it shows an error message.
  *
  * @param context The Android context for resource access
  * @param currentSettings The current application configuration

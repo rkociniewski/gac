@@ -10,7 +10,7 @@ import java.util.Locale
 /**
  * Configuration data class for the application settings.
  *
- * This class stores all user configurable settings that control the application's behavior,
+ * This class stores are all user-configurable settings that control the application's behavior,
  * particularly regarding the display and drawing of pericopes (gospel sections).
  *
  * @property additionalMode Determines whether additional pericopes should be shown

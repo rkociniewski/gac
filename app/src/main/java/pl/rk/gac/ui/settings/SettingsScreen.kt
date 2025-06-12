@@ -19,10 +19,10 @@ import pl.rk.gac.enums.DisplayMode
 import pl.rk.gac.enums.DrawMode
 import pl.rk.gac.enums.Language
 import pl.rk.gac.model.Settings
-import pl.rk.gac.ui.util.HelpLabel
-import pl.rk.gac.ui.util.LanguageSelector
-import pl.rk.gac.ui.util.ModeSelector
-import pl.rk.gac.ui.util.SettingsSlider
+import pl.rk.gac.ui.helper.HelpLabel
+import pl.rk.gac.ui.helper.LanguageSelector
+import pl.rk.gac.ui.helper.ModeSelector
+import pl.rk.gac.ui.helper.SettingsSlider
 import pl.rk.gac.util.Dimensions
 import pl.rk.gac.util.Numbers
 

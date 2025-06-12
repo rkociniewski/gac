@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Ewangelia a caso</string>
     <string name="draw">Losuj</string>
-    <string name="draw_button">Wylosuj perykopę</string>
     <string name="close">Zamknij</string>
 
     <string name="error_no_additional">Ustaw co najmniej 1 perykopę przed lub po.</string>
@@ -29,8 +28,8 @@
     <string name="label_word_threshold">Próg słów</string>
     <string name="label_prev">Poprzednie perykopy</string>
     <string name="label_next">Następne perykopy</string>
-    <string name="label_start_fallback">Gdy początek Ewangeli…</string>
-    <string name="label_end_fallback">Gdy koniec Ewangeli…</string>
+    <string name="label_start_fallback">Gdy początek Ewangelii…</string>
+    <string name="label_end_fallback">Gdy koniec Ewangelii…</string>
 
     <string name="tooltip_additional_mode">Określa, czy i kiedy dodawać dodatkowe perykopy przed i po wylosowanym fragmencie.</string>
     <string name="tooltip_word_threshold">Jeśli liczba słów w perykopie jest mniejsza niż próg, dodawane są perykopy sąsiednie.</string>

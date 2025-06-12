@@ -10,10 +10,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import pl.rk.gac.ui.helper.isDarkTheme
+import pl.rk.gac.ui.helper.rememberLocalizedContext
 import pl.rk.gac.ui.pericope.PericopeScreen
 import pl.rk.gac.ui.theme.GospelACasoTheme
-import pl.rk.gac.ui.util.isDarkTheme
-import pl.rk.gac.ui.util.rememberLocalizedContext
 import pl.rk.gac.viewmodel.PericopeViewModel
 
 /**
@@ -30,7 +30,7 @@ import pl.rk.gac.viewmodel.PericopeViewModel
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     /**
-     * Sets up the activity with appropriate theme and content.
+     * Sets up the activity with the appropriate theme and content.
      *
      * @param savedInstanceState If the activity is being re-initialized, this Bundle
      * contains the data it most recently supplied in onSaveInstanceState.
@@ -52,5 +52,3 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
