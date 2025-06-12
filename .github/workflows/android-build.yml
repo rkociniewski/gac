@@ -57,7 +57,7 @@ jobs:
       -
         name: Upload APK
         if: ${{ inputs.build_release }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-release
           path: app/build/outputs/apk/release/*.apk
@@ -66,7 +66,7 @@ jobs:
       -
         name: Upload test reports
         if: ${{ inputs.run_tests && failure() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: app/build/reports/tests/
