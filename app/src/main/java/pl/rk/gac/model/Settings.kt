@@ -29,9 +29,10 @@ data class Settings(
     val nextCount: Int = 1,                                 // how many pericopes after drawn
     val startFallback: Int = 1,                             // if begin of Gospel
     val endFallback: Int = 1,                               // if end of Evangelion 残酷な天使のように
-    val displayMode: DisplayMode = DisplayMode.LIGHT,       // Display mMode for Dark Mode
+    val displayMode: DisplayMode = DisplayMode.LIGHT,       // Display Mode for Dark Mode
     val drawMode: DrawMode = DrawMode.BUTTON,               // Draw mode
-    val language: Language = resolveDefaultLanguage(),
+    val language: Language = resolveDefaultLanguage(),      // Display Language
+    val fontSize: Float = 18f                               // Font Size
 )
 
 fun resolveDefaultLanguage(): Language {

@@ -30,6 +30,7 @@
     <string name="label_next">Next pericopes</string>
     <string name="label_start_fallback">When the beginning of the Gospel…</string>
     <string name="label_end_fallback">When the end of the Gospel…</string>
+    <string name="label_font_size">Font size</string>
 
     <string name="tooltip_additional_mode">Determines whether and when to add additional pericopes before and after the randomly selected fragment.</string>
     <string name="tooltip_word_threshold">If the number of words in the pericope is lower than the threshold, adjacent pericopes are added.</string>
@@ -41,4 +42,5 @@
     <string name="tooltip_draw_mode">Defines how a new pericope is drawn: by button, rotation or both.</string>
     <string name="tooltip_icon_description">Show setting description</string>
     <string name="tooltip_language">Select application language</string>
+    <string name="tooltip_font_size">Select font size</string>
 </resources>

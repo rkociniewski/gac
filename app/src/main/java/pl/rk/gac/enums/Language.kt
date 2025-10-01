@@ -9,9 +9,9 @@ import pl.rk.gac.R
  * @property label Resource ID for the display label of this mode
  */
 enum class Language(
-    @StringRes override val label: Int,
-    @DrawableRes val flagIcon: Int,
-    @RawRes val resource: Int
+    @param:StringRes override val label: Int,
+    @param:DrawableRes val flagIcon: Int,
+    @param:RawRes val resource: Int
 ) : DisplayText {
     PL(R.string.lang_pl, R.drawable.flag_pl, R.raw.pl_gospel),
     EN(R.string.lang_en, R.drawable.flag_uk, R.raw.en_gospel),

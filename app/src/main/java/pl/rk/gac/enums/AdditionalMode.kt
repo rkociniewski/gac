@@ -13,7 +13,7 @@ import pl.rk.gac.R
  *
  * @property label Resource ID for the display label of this mode
  */
-enum class AdditionalMode(@StringRes override val label: Int) : DisplayText {
+enum class AdditionalMode(@param:StringRes override val label: Int) : DisplayText {
     YES(R.string.additional_mode_yes),
     NO(R.string.additional_mode_no),
     CONDITIONAL(R.string.additional_mode_conditional)

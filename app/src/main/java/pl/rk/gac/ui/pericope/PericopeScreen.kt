@@ -86,25 +86,18 @@ fun PericopeScreen(
             )
         }
     ) {
-        PericopeContent(
-            pericopes = pericopes,
-            selectedId = selectedId,
-            modifier = Modifier.padding(it)
-        )
+        PericopeContent(pericopes, selectedId, Modifier.padding(it), settings, viewModel::updateSettings)
     }
 
     if (showSettingsDialog) {
         SettingsDialog(
-            settings = settings,
-            onSettingsUpdate = {
+            settings, {
                 viewModel.updateSettings(it)
-            },
-            onDismiss = {
+            }, {
                 showSettingsDialog = false
                 viewModel.updateSettings(settings)
                 viewModel.drawPericope()
-            },
-            localizedContext = localizedContext
+            }, localizedContext
         )
     }
 }

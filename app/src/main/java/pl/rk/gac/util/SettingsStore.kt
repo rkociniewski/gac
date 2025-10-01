@@ -1,7 +1,9 @@
 package pl.rk.gac.util
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -36,6 +38,7 @@ object SettingsStore {
     private val END_FALLBACK = intPreferencesKey("end_fallback")
     private val DISPLAY_MODE = stringPreferencesKey("display_mode")
     private val DRAW_MODE = stringPreferencesKey("draw_mode")
+    private val FONT_SIZE = floatPreferencesKey("font_size")
 
     fun read(context: Context): Flow<Settings> {
         return context.dataStore.data.map {
@@ -46,9 +49,10 @@ object SettingsStore {
                 it[NEXT_COUNT] ?: 1,
                 it[START_FALLBACK] ?: 1,
                 it[END_FALLBACK] ?: 1,
-                safeEnumValueOf(it[DISPLAY_MODE], DisplayMode.LIGHT),
+                safeEnumValueOf(it[DISPLAY_MODE], DisplayMode.SYSTEM),
                 safeEnumValueOf(it[DRAW_MODE], DrawMode.BUTTON),
                 safeEnumValueOf(it[LANGUAGE], resolveDefaultLanguage()),
+                it[FONT_SIZE] ?: Numbers.EIGHTEEN.toFloat()
             )
             logger.debug("Loaded settings: $settings")
             settings
@@ -60,6 +64,7 @@ object SettingsStore {
 
     @Suppress("TooGenericExceptionCaught")
     suspend fun write(context: Context, settings: Settings) = try {
+        Log.e(this::class.java.simpleName, "ZMIENIONO SETTINGS: ${settings.fontSize}")
         context.dataStore.edit {
             it[ADDITIONAL_MODE] = settings.additionalMode.name
             it[WORD_THRESHOLD] = settings.wordThreshold
@@ -70,6 +75,7 @@ object SettingsStore {
             it[DISPLAY_MODE] = settings.displayMode.name
             it[DRAW_MODE] = settings.drawMode.name
             it[LANGUAGE] = settings.language.name
+            it[FONT_SIZE] = settings.fontSize
         }
         true
     } catch (e: Exception) {

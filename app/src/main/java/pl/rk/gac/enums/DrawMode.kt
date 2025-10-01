@@ -13,7 +13,7 @@ import pl.rk.gac.R
  *
  * @property label Resource ID for the display label of this mode
  */
-enum class DrawMode(@StringRes override val label: Int) : DisplayText {
+enum class DrawMode(@param:StringRes override val label: Int) : DisplayText {
     BUTTON(R.string.draw_mode_button),
     ROTATION(R.string.draw_mode_rotation),
     BOTH(R.string.draw_mode_both)

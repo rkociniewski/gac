@@ -29,7 +29,8 @@
     <string name="label_prev">Poprzednie perykopy</string>
     <string name="label_next">Następne perykopy</string>
     <string name="label_start_fallback">Gdy początek Ewangelii…</string>
-    <string name="label_end_fallback">Gdy koniec Ewangelii…</string>
+    <string name="label_end_fallback">Gdy koniec Ewangelii...</string>
+    <string name="label_font_size">Wielkość czcionki</string>
 
     <string name="tooltip_additional_mode">Określa, czy i kiedy dodawać dodatkowe perykopy przed i po wylosowanym fragmencie.</string>
     <string name="tooltip_word_threshold">Jeśli liczba słów w perykopie jest mniejsza niż próg, dodawane są perykopy sąsiednie.</string>
@@ -41,6 +42,7 @@
     <string name="tooltip_draw_mode">Określa, w jaki sposób losowana jest nowa perykopa: przyciskiem, obrotem lub oba.</string>
     <string name="tooltip_icon_description">Pokaż opis ustawienia</string>
     <string name="tooltip_language">Wybierz język aplikacji</string>
+    <string name="tooltip_font_size">Wybierz wielkość czcionki</string>
 
     <string name="lang_pl" translatable="false">Polski</string>
     <string name="lang_en" translatable="false">English</string>

@@ -13,7 +13,7 @@ import pl.rk.gac.R
  *
  * @property label Resource ID for the display label of this mode
  */
-enum class DisplayMode(@StringRes override val label: Int) : DisplayText {
+enum class DisplayMode(@param:StringRes override val label: Int) : DisplayText {
     LIGHT(R.string.display_mode_light),
     DARK(R.string.display_mode_dark),
     SYSTEM(R.string.display_mode_system)

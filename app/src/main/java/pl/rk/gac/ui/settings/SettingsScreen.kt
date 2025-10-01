@@ -47,6 +47,7 @@ fun SettingsScreen(
         Arrangement.Center,
         Alignment.CenterHorizontally
     ) {
+        // Language
         HelpLabel(
             stringResource(R.string.settings_label_language),
             stringResource(R.string.tooltip_language)
@@ -56,6 +57,7 @@ fun SettingsScreen(
             updateSettings(settings.copy(language = it))
         }
 
+        // Additional pericope mode
         HelpLabel(
             stringResource(R.string.section_additional_mode),
             stringResource(R.string.tooltip_additional_mode)
@@ -65,25 +67,34 @@ fun SettingsScreen(
         }
 
         if (settings.additionalMode == AdditionalMode.CONDITIONAL) {
+            // Word threshold mode
             HelpLabel(
                 stringResource(R.string.label_word_threshold),
                 stringResource(R.string.tooltip_word_threshold)
             )
-            SettingsSlider(settings.wordThreshold, (Numbers.TWENTY..Numbers.HUNDRED step Numbers.TEN)) {
+            SettingsSlider(settings.wordThreshold, Numbers.TWENTY..Numbers.HUNDRED step Numbers.TEN) {
                 updateSettings(settings.copy(wordThreshold = it))
             }
         }
 
         if (settings.additionalMode != AdditionalMode.NO) {
+
+            // Previous pericope count
             HelpLabel(stringResource(R.string.label_prev), stringResource(R.string.tooltip_prev))
             SettingsSlider(settings.prevCount) { updateSettings(settings.copy(prevCount = it)) }
+
+            // Next pericope count
             HelpLabel(stringResource(R.string.label_next), stringResource(R.string.tooltip_next))
             SettingsSlider(settings.nextCount) { updateSettings(settings.copy(nextCount = it)) }
+
+            // Begin of Gospel fallback
             HelpLabel(
                 stringResource(R.string.label_start_fallback),
                 stringResource(R.string.tooltip_start_fallback)
             )
             SettingsSlider(settings.startFallback) { updateSettings(settings.copy(startFallback = it)) }
+
+            // End of Gospel fallback
             HelpLabel(
                 stringResource(R.string.label_end_fallback),
                 stringResource(R.string.tooltip_end_fallback)
@@ -93,7 +104,7 @@ fun SettingsScreen(
 
         HorizontalDivider()
 
-        // Dark mode display mode
+        // Display mode
         HelpLabel(
             stringResource(R.string.section_display_mode),
             stringResource(R.string.tooltip_display_mode)
@@ -102,6 +113,7 @@ fun SettingsScreen(
             updateSettings(settings.copy(displayMode = it))
         }
 
+        // Draw mode
         HelpLabel(
             stringResource(R.string.section_draw_mode),
             stringResource(R.string.tooltip_draw_mode)
@@ -111,6 +123,17 @@ fun SettingsScreen(
         }
 
         Spacer(modifier = Modifier.height(Dimensions.height))
+
+        HorizontalDivider()
+
+        // Font size
+        HelpLabel(
+            stringResource(R.string.label_font_size),
+            stringResource(R.string.tooltip_font_size)
+        )
+        SettingsSlider(settings.fontSize.toInt(), Numbers.TWELVE..Numbers.FORTY_EIGHT step Numbers.ONE) {
+            updateSettings(settings.copy(fontSize = it.toFloat()))
+        }
 
         Button(
             onClick = onClose,

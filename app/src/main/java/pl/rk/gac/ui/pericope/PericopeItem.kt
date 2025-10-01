@@ -1,9 +1,12 @@
 package pl.rk.gac.ui.pericope
 
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import pl.rk.gac.model.Pericope
 
 /**
@@ -16,10 +19,11 @@ import pl.rk.gac.model.Pericope
  * @param isMain Whether this is the main (selected) pericope
  */
 @Composable
-fun PericopeItem(pericope: Pericope, isMain: Boolean) {
+fun PericopeItem(pericope: Pericope, isMain: Boolean, fontSize: Float) {
     Text(
         text = "${pericope.reference} — ${pericope.title}\n${pericope.text}",
         fontWeight = if (isMain) FontWeight.Bold else FontWeight.Normal,
-        style = MaterialTheme.typography.bodyLarge
+        style = TextStyle(fontSize = fontSize.sp),
+        modifier = Modifier.fillMaxWidth()
     )
 }
