@@ -387,6 +387,60 @@ Add to `.github/workflows/codeql.yml`:
           -x test
 ```
 
+### CodeQL Times Out
+
+**Problem**: Analysis takes too long and times out after 30+ minutes
+
+**Symptom**: Workflow cancelled after loading many queries
+
+**Solutions**:
+
+**Option 1: Increase timeout**
+
+```yaml
+jobs:
+    analyze:
+        timeout-minutes: 60  # Zwiększ z 30 do 60
+```
+
+**Option 2: Use security-only queries** (RECOMMENDED)
+
+```yaml
+-   uses: github/codeql-action/init@v3
+    with:
+        queries: security-only  # Zamiast security-extended
+```
+
+**Option 3: Exclude more paths**
+
+```yaml
+# .github/codeql/codeql-config.yml
+paths-ignore:
+    - '**/build/**'
+    - '**/test/**'
+    - '**/res/**'  # Dodaj resources
+    - '**/assets/**'
+
+paths:
+    - 'app/src/main/kotlin/**'  # Tylko główny kod
+```
+
+**Option 4: Use lite workflow**
+
+```bash
+# Użyj .github/workflows/codeql-lite.yml
+# Szybsza wersja z minimalnymi queries
+```
+
+**Option 5: Allocate more resources**
+
+```yaml
+-   uses: github/codeql-action/analyze@v3
+    with:
+        threads: 4  # Więcej wątków
+        ram: 6144   # Więcej RAM (6GB)
+```
+
 ### No Results Shown
 
 **Problem**: Scan completes but no results

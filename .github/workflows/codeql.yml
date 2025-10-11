@@ -38,7 +38,7 @@ jobs:
   analyze:
     name: Analyze Code
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     strategy:
       fail-fast: false
@@ -65,6 +65,8 @@ jobs:
       -
         name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
 
       -
         name: Make gradlew executable
@@ -78,17 +80,23 @@ jobs:
           languages: ${{ matrix.language }}
           # Queries to run: default, security-extended, security-and-quality
           queries: security-extended
-          # Custom queries (optional)
-          # config-file: .github/codeql/codeql-config.yml
+          config-file: .github/codeql/codeql-config.yml
 
       # Build the project for CodeQL analysis
       # CodeQL needs to see how code is used
       -
         name: Build project
         run: |
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          ./gradlew assembleDebug \
+            --no-daemon \
+            --no-build-cache \
+            --stacktrace \
+            -x lint \
+            -x lintVitalRelease \
+            -x test \
+            -x detekt
 
-      # Perform CodeQL Analysis
+      # Perform CodeQL Analysis z optymalizacjami
       -
         name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
@@ -96,10 +104,12 @@ jobs:
           category: "/language:${{ matrix.language }}"
           # Upload results even if there are no findings
           upload: true
+          # Threads for analysis (default: auto)
+          threads: 4
           # SARIF output directory
           output: codeql-results
-          # Threads for analysis (default: auto)
-          threads: 2
+          # Used RAM
+          ram: 6144
 
       # Upload SARIF file as artifact (optional)
       -

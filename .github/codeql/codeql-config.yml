@@ -3,17 +3,10 @@
 
 name: "CodeQL Config for Android"
 
-# Disable default queries and use only custom ones
-# disable-default-queries: true
-
 # Query suites to run
 queries:
   - uses: security-extended
   - uses: security-and-quality
-
-# Custom query packs (optional)
-# packs:
-#   - codeql/java-queries
 
 # Paths to exclude from analysis
 paths-ignore:
@@ -26,18 +19,30 @@ paths-ignore:
   - '**/proguard-rules.pro'
   - '**/*.md'
   - '**/docs/**'
+  - '**/res/**'  # Exclude resources (XML, etc.)
+  - '**/assets/**'
+  - '**/.gradle/**'
+  - '**/gradle/**'
+  - '**/buildSrc/**'
 
-# Paths to include (optional - only these will be analyzed)
-# paths:
-#   - 'app/src/main/**'
-#   - 'library/src/main/**'
+# Paths to include
+paths:
+  - 'app/src/main/kotlin/**'
+  - 'app/src/main/java/**'
 
-# Query filters - exclude specific queries
-# query-filters:
-#   - exclude:
-#       id: java/unused-local-variable
-#   - exclude:
-#       problem.severity: recommendation
+# Query filters - exclude low-priority queries
+query-filters:
+  # Exclude informational findings
+  -
+    exclude:
+      problem.severity: recommendation
+  # Exclude specific Android queries that may timeout
+  -
+    exclude:
+      id: java/android/implicit-pendingintent
+  -
+    exclude:
+      id: java/android/unsafe-android-webview-fetch
 
 # Additional configuration for Android
 android:
@@ -61,10 +66,10 @@ performance:
   threads: 0  # 0 = auto-detect
 
   # Memory limit (MB)
-  ram: 4096
+  ram: 6144
 
   # Timeout for queries (seconds)
-  timeout: 900
+  timeout: 1800
 
 # Severity levels to report
 # Options: error, warning, recommendation, note
