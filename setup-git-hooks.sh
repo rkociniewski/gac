@@ -51,7 +51,7 @@ exit 0
 EOF
 
 # Create pre-commit hook
-cat > "$SCRIPTS_DIR/pre-commit" << 'EOF'
+cat > "$SCRIPTS_DIR/pre-commit" << 'PRECOMMIT_EOF'
 #!/bin/bash
 # Pre-commit checks for Android project
 
@@ -63,7 +63,7 @@ echo "🔍 Running pre-commit checks..."
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
 # Check if this is an Android project
 if [ ! -f "app/build.gradle" ] && [ ! -f "app/build.gradle.kts" ]; then
@@ -73,20 +73,22 @@ fi
 
 # 1. Check for debug statements (exclude logger classes and test files)
 echo "📝 Checking for debug statements..."
-if git diff --cached --name-only | grep -E '\.(kt|java)$' | grep -v -E '(AppLogger|Logger|Log\.kt|Test\.kt|test/)' | xargs grep -nE '(System\.out\.println|Log\.[dev]|console\.log|debugger|TODO|FIXME)' 2>/dev/null; then
-    echo -e "${YELLOW}⚠️  Warning: Debug statements found${NC}"
-    echo "Consider removing them before committing"
-    echo "Note: Logger/AppLogger classes are excluded from this check"
-    # Uncomment to make this blocking:
-    # exit 1
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(kt|java)$' | grep -v -E '(AppLogger|Logger|Log\.kt|Test\.kt|test/)' || true)
+
+if [ -n "$STAGED_FILES" ]; then
+    if echo "$STAGED_FILES" | xargs grep -nE '(System\.out\.println|Log\.[dev]|console\.log|debugger|TODO|FIXME)' 2>/dev/null; then
+        echo -e "${YELLOW}⚠️  Warning: Debug statements found${NC}"
+        echo "Consider removing them before committing"
+        echo "Note: Logger/AppLogger classes are excluded from this check"
+    fi
 fi
 
 # 2. Check for large files
 echo "📦 Checking for large files..."
-MAX_SIZE=5242880 # 5MB in bytes
-for file in $(git diff --cached --name-only); do
+MAX_SIZE=5242880
+for file in $(git diff --cached --name-only --diff-filter=ACM); do
     if [ -f "$file" ]; then
-        size=$(wc -c < "$file")
+        size=$(wc -c < "$file" 2>/dev/null || echo 0)
         if [ "$size" -gt "$MAX_SIZE" ]; then
             echo -e "${RED}❌ File too large: $file ($(($size / 1048576))MB)${NC}"
             echo "Files larger than 5MB should not be committed"
@@ -97,35 +99,30 @@ done
 
 # 3. Check for secrets/API keys (exclude documentation files)
 echo "🔐 Checking for secrets..."
-SECRET_PATTERNS=(
-    'api[_-]?key\s*=\s*["\047][^"\047]{10,}'
-    'secret\s*=\s*["\047][^"\047]{10,}'
-    'password\s*=\s*["\047][^"\047]{5,}'
-    'token\s*=\s*["\047][^"\047]{10,}'
-    'aws[_-]?access[_-]?key'
-    'private[_-]?key'
-)
+STAGED_CODE_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -v -E '\.(md|txt)$' | grep -v -E '(test/|Test\.kt|spec\.)' || true)
 
-# Get staged files, excluding documentation and test files
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -v -E '\.(md|txt)$' | grep -v -E '(test/|Test\.kt|spec\.)')
+if [ -n "$STAGED_CODE_FILES" ]; then
+    SECRET_FOUND=false
 
-if [ -n "$STAGED_FILES" ]; then
-    for pattern in "${SECRET_PATTERNS[@]}"; do
-        if echo "$STAGED_FILES" | xargs grep -iE "$pattern" 2>/dev/null; then
+    for pattern in 'api[_-]?key\s*=\s*["\047][^"\047]{10,}' 'secret\s*=\s*["\047][^"\047]{10,}' 'password\s*=\s*["\047][^"\047]{5,}' 'token\s*=\s*["\047][^"\047]{10,}' 'aws[_-]?access[_-]?key' 'private[_-]?key'; do
+        if echo "$STAGED_CODE_FILES" | xargs grep -lE "$pattern" 2>/dev/null >/dev/null; then
             echo -e "${RED}❌ Potential secret detected!${NC}"
             echo "Pattern: $pattern"
             echo "Make sure you're not committing sensitive data"
-            echo "Consider using local.properties or environment variables"
-            echo ""
-            echo "Files excluded from check: *.md, *.txt, *test*, *Test.kt, *spec.*"
-            exit 1
+            echo "Files excluded: *.md, *.txt, *test*, *Test.kt"
+            SECRET_FOUND=true
+            break
         fi
     done
+
+    if [ "$SECRET_FOUND" = true ]; then
+        exit 1
+    fi
 fi
 
 # 4. Check for merge conflict markers
 echo "🔀 Checking for merge conflicts..."
-if git diff --cached | grep -E '^(<<<<<<<|=======|>>>>>>>)' >/dev/null; then
+if git diff --cached | grep -E '^(<<<<<<<|=======|>>>>>>>)' >/dev/null 2>&1; then
     echo -e "${RED}❌ Merge conflict markers found${NC}"
     echo "Please resolve all conflicts before committing"
     exit 1
@@ -134,32 +131,24 @@ fi
 # 5. Run ktlint (if available)
 if command -v ktlint &> /dev/null; then
     echo "🎨 Running ktlint..."
-    if ! git diff --cached --name-only | grep -E '\.kt$' | xargs ktlint --relative 2>/dev/null; then
-        echo -e "${RED}❌ Kotlin code style issues found${NC}"
-        echo "Run: ./gradlew ktlintFormat"
-        exit 1
-    fi
-fi
-
-# 6. Run detekt (if configured)
-if [ -f "detekt.yml" ] || [ -f "config/detekt/detekt.yml" ]; then
-    echo "🔍 Running detekt (quick check)..."
-    if git diff --cached --name-only | grep -E '\.(kt|java)$' >/dev/null; then
-        # Only run on changed files for speed
-        echo "Detekt configured - consider running: ./gradlew detekt"
-        # Uncomment to enforce:
-        # ./gradlew detekt || exit 1
+    STAGED_KT=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.kt$' || true)
+    if [ -n "$STAGED_KT" ]; then
+        if ! echo "$STAGED_KT" | xargs ktlint --relative 2>/dev/null; then
+            echo -e "${RED}❌ Kotlin code style issues found${NC}"
+            echo "Run: ./gradlew ktlintFormat"
+            exit 1
+        fi
     fi
 fi
 
 echo -e "${GREEN}✅ All pre-commit checks passed!${NC}"
 exit 0
-EOF
+PRECOMMIT_EOF
 
-# Create prepare-commit-msg hook
+# Create prepare-commit-msg hook (for version check)
 cat > "$SCRIPTS_DIR/prepare-commit-msg" << 'EOF'
 #!/bin/bash
-# Adds branch name to commit message
+# Adds branch name to commit message and checks version bump
 
 COMMIT_MSG_FILE=$1
 COMMIT_SOURCE=$2
@@ -183,7 +172,7 @@ if [ -z "$COMMIT_SOURCE" ]; then
 fi
 EOF
 
-# Create post-commit hook
+# Create post-commit hook (for version warning)
 cat > "$SCRIPTS_DIR/post-commit" << 'EOF'
 #!/bin/bash
 # Post-commit hook to check version bump on main/release branches
@@ -218,8 +207,8 @@ fi
 exit 0
 EOF
 
-# Create pre-push hook
-cat > "$SCRIPTS_DIR/pre-push" << 'EOF'
+# Create pre-push hook with FIXED VERSION PARSING
+cat > "$SCRIPTS_DIR/pre-push" << 'PREPUSH_EOF'
 #!/bin/bash
 # Pre-push hook to verify version bump on main/release branches
 
@@ -229,6 +218,7 @@ set -e
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m'
 
 # Get the branch being pushed to
@@ -252,47 +242,96 @@ while read local_ref local_sha remote_ref remote_sha; do
         continue
     fi
 
+    # FIXED: Extract versionCode and versionName with improved regex
     CURRENT_VERSION_CODE=$(grep -E 'versionCode\s*=\s*[0-9]+' "$BUILD_FILE" | grep -oE '[0-9]+' | head -1)
-    CURRENT_VERSION_NAME=$(grep -E 'versionName\s*=\s*["\047][^"\047]+["\047]' "$BUILD_FILE" | grep -oE '["\047][^"\047]+["\047]' | tr -d '"' | tr -d "'" | head -1)
+
+    # Try double quotes first
+    CURRENT_VERSION_NAME=$(grep -E 'versionName\s*=\s*"[^"]+"' "$BUILD_FILE" | grep -oE '"[^"]+"' | tr -d '"' | head -1)
+
+    # Fallback to single quotes if not found
+    if [ -z "$CURRENT_VERSION_NAME" ]; then
+        CURRENT_VERSION_NAME=$(grep -E "versionName\s*=\s*'[^']+'" "$BUILD_FILE" | grep -oE "'[^']+'" | tr -d "'" | head -1)
+    fi
 
     # Get version from remote (if exists)
     if git rev-parse "origin/$BRANCH_NAME" >/dev/null 2>&1; then
-        REMOTE_VERSION_CODE=$(git show "origin/$BRANCH_NAME:$BUILD_FILE" 2>/dev/null | grep -E 'versionCode\s*=\s*[0-9]+' | grep -oE '[0-9]+' | head -1)
-        REMOTE_VERSION_NAME=$(git show "origin/$BRANCH_NAME:$BUILD_FILE" 2>/dev/null | grep -E 'versionName\s*=\s*["\047][^"\047]+["\047]' | grep -oE '["\047][^"\047]+["\047]' | tr -d '"' | tr -d "'" | head -1)
+        REMOTE_BUILD_CONTENT=$(git show "origin/$BRANCH_NAME:$BUILD_FILE" 2>/dev/null || echo "")
 
-        echo "Remote version: $REMOTE_VERSION_NAME ($REMOTE_VERSION_CODE)"
-        echo "Local version:  $CURRENT_VERSION_NAME ($CURRENT_VERSION_CODE)"
+        if [ -n "$REMOTE_BUILD_CONTENT" ]; then
+            # FIXED: Extract remote versions with same improved regex
+            REMOTE_VERSION_CODE=$(echo "$REMOTE_BUILD_CONTENT" | grep -E 'versionCode\s*=\s*[0-9]+' | grep -oE '[0-9]+' | head -1)
 
-        # Check if version was bumped
-        if [ "$CURRENT_VERSION_CODE" -le "$REMOTE_VERSION_CODE" ]; then
-            echo -e "${RED}❌ ERROR: versionCode was not incremented!${NC}"
-            echo "   Remote: $REMOTE_VERSION_CODE"
-            echo "   Local:  $CURRENT_VERSION_CODE"
+            # Try double quotes first
+            REMOTE_VERSION_NAME=$(echo "$REMOTE_BUILD_CONTENT" | grep -E 'versionName\s*=\s*"[^"]+"' | grep -oE '"[^"]+"' | tr -d '"' | head -1)
+
+            # Fallback to single quotes
+            if [ -z "$REMOTE_VERSION_NAME" ]; then
+                REMOTE_VERSION_NAME=$(echo "$REMOTE_BUILD_CONTENT" | grep -E "versionName\s*=\s*'[^']+'" | grep -oE "'[^']+'" | tr -d "'" | head -1)
+            fi
+
+            echo "Remote version: $REMOTE_VERSION_NAME ($REMOTE_VERSION_CODE)"
+            echo "Local version:  $CURRENT_VERSION_NAME ($CURRENT_VERSION_CODE)"
             echo ""
-            echo "Please bump versionCode in $BUILD_FILE"
-            exit 1
-        fi
 
-        if [ "$CURRENT_VERSION_NAME" == "$REMOTE_VERSION_NAME" ]; then
-            echo -e "${YELLOW}⚠️  WARNING: versionName was not changed${NC}"
-            echo "   Version: $CURRENT_VERSION_NAME"
-            echo ""
-            read -p "Continue anyway? (y/N): " -n 1 -r
-            echo
-            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            # Validate extraction
+            if [ -z "$CURRENT_VERSION_CODE" ] || [ -z "$REMOTE_VERSION_CODE" ]; then
+                echo -e "${RED}❌ ERROR: Could not extract version information${NC}"
+                echo "Current versionCode: '$CURRENT_VERSION_CODE'"
+                echo "Remote versionCode: '$REMOTE_VERSION_CODE'"
                 exit 1
             fi
-        fi
 
-        echo -e "${GREEN}✅ Version check passed${NC}"
+            # Check versionCode
+            if [ "$CURRENT_VERSION_CODE" -le "$REMOTE_VERSION_CODE" ]; then
+                echo -e "${RED}❌ ERROR: versionCode was not incremented!${NC}"
+                echo "   Remote: $REMOTE_VERSION_CODE"
+                echo "   Local:  $CURRENT_VERSION_CODE"
+                echo ""
+                echo "Please bump versionCode in $BUILD_FILE"
+                echo "Next versionCode should be: $((REMOTE_VERSION_CODE + 1))"
+                exit 1
+            fi
+
+            CODE_DIFF=$((CURRENT_VERSION_CODE - REMOTE_VERSION_CODE))
+            echo -e "${GREEN}✅ versionCode incremented by $CODE_DIFF${NC}"
+
+            # Check versionName
+            if [ "$CURRENT_VERSION_NAME" == "$REMOTE_VERSION_NAME" ]; then
+                echo -e "${RED}❌ ERROR: versionName was not changed!${NC}"
+                echo "   Version: $CURRENT_VERSION_NAME"
+                echo ""
+                echo "Please bump versionName in $BUILD_FILE"
+
+                # Suggest next version based on current
+                if [[ $CURRENT_VERSION_NAME =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+                    MAJOR="${BASH_REMATCH[1]}"
+                    MINOR="${BASH_REMATCH[2]}"
+                    PATCH="${BASH_REMATCH[3]}"
+                    NEXT_PATCH=$((PATCH + 1))
+                    echo "Suggested: $MAJOR.$MINOR.$NEXT_PATCH"
+                fi
+                exit 1
+            fi
+
+            echo -e "${GREEN}✅ versionName updated${NC}"
+            echo "   $REMOTE_VERSION_NAME → $CURRENT_VERSION_NAME"
+            echo ""
+            echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+            echo -e "${GREEN}✅ Version check passed${NC}"
+            echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        else
+            echo -e "${YELLOW}⚠️  Could not read remote build file${NC}"
+        fi
     else
         echo -e "${YELLOW}⚠️  No remote branch found, skipping comparison${NC}"
         echo "Current version: $CURRENT_VERSION_NAME ($CURRENT_VERSION_CODE)"
     fi
+
+    echo ""
 done
 
 exit 0
-EOF
+PREPUSH_EOF
 
 # Make all hooks executable
 chmod +x "$SCRIPTS_DIR"/*

@@ -50,7 +50,7 @@ android:
   security-checks: true
 
   # Minimum API level to consider
-  min-api-level: 24
+  min-api-level: 28
 
 # Java/Kotlin specific settings
 java:

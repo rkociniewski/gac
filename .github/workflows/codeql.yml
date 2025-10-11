@@ -44,8 +44,6 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'java-kotlin' ]
-        # CodeQL supports: cpp, csharp, go, java-kotlin, javascript-typescript, python, ruby, swift
-        # For Android: use 'java-kotlin'
 
     steps:
       -
@@ -80,6 +78,7 @@ jobs:
           languages: ${{ matrix.language }}
           # Queries to run: default, security-extended, security-and-quality
           queries: security-extended
+          # Custom queries (optional)
           config-file: .github/codeql/codeql-config.yml
 
       # Build the project for CodeQL analysis
@@ -96,7 +95,7 @@ jobs:
             -x test \
             -x detekt
 
-      # Perform CodeQL Analysis z optymalizacjami
+      # Perform CodeQL Analysis
       -
         name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
