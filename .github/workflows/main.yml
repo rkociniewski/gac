@@ -4,6 +4,14 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.gitignore'
+
+concurrency:
+  group: main-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   android-build:
@@ -11,27 +19,81 @@ jobs:
     with:
       run_tests: true
       build_release: true
+      upload_artifacts: true
 
   tag-release:
     needs: android-build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       -
         name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       -
-        name: Get version from build.gradle
+        name: Get version from build.gradle.kts
         id: get-version
         run: |
-          VERSION=$(grep -o "versionName\s*=\s*[\"'][^\"']*[\"']" app/build.gradle | sed -E "s/versionName\s*=\s*[\"']([^\"']*)[\"']/\1/")
+          # Try Kotlin DSL first
+          if [ -f "app/build.gradle.kts" ]; then
+            VERSION=$(grep -E 'versionName\s*=\s*"[^"]*"' app/build.gradle.kts | sed -E 's/.*versionName\s*=\s*"([^"]*)".*/\1/' | head -1)
+          else
+            # Fallback to Groovy DSL
+            VERSION=$(grep -E 'versionName\s*=?\s*["\047][^"\047]*["\047]' app/build.gradle | sed -E 's/.*versionName\s*=?\s*["\047]([^"\047]*)["\047].*/\1/' | head -1)
+          fi
+
+          if [ -z "$VERSION" ]; then
+            echo "Error: Could not extract version"
+            exit 1
+          fi
+
           echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
-          echo "::set-output name=version::$VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
 
       -
-        name: Create Git tag
+        name: Check if tag exists
+        id: check-tag
         run: |
+          if git rev-parse "v${{ env.APP_VERSION }}" >/dev/null 2>&1; then
+            echo "Tag v${{ env.APP_VERSION }} already exists"
+            echo "tag_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "tag_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      -
+        name: Create and push Git tag
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag -a "v${{ env.APP_VERSION }}" -m "Release v${{ env.APP_VERSION }}"
           git push origin "v${{ env.APP_VERSION }}"
+
+      -
+        name: Download build artifacts
+        uses: actions/download-artifact@v5
+        with:
+          pattern: apk-release-*
+          merge-multiple: true
+          path: ./artifacts
+
+      -
+        name: Create GitHub Release
+        if: steps.check-tag.outputs.tag_exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.APP_VERSION }}
+          name: Release v${{ env.APP_VERSION }}
+          draft: false
+          prerelease: false
+          files: |
+            ./artifacts/**/*.apk
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
