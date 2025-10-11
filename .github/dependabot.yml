@@ -1,0 +1,98 @@
+# Dependabot configuration for Android project
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+
+updates:
+  # Gradle dependencies (Kotlin, Android libraries, etc.)
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Warsaw"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "rkociniewski"
+    assignees:
+      - "rkociniewski"
+    labels:
+      - "dependencies"
+      - "gradle"
+    commit-message:
+      prefix: "build"
+      prefix-development: "build"
+      include: "scope"
+    # Group related updates
+    groups:
+      kotlin:
+        patterns:
+          - "org.jetbrains.kotlin*"
+          - "kotlin-*"
+      androidx:
+        patterns:
+          - "androidx.*"
+      compose:
+        patterns:
+          - "androidx.compose.*"
+      testing:
+        patterns:
+          - "*junit*"
+          - "*mockito*"
+          - "*espresso*"
+          - "*test*"
+      networking:
+        patterns:
+          - "*retrofit*"
+          - "*okhttp*"
+          - "*ktor*"
+      dependency-injection:
+        patterns:
+          - "*hilt*"
+          - "*dagger*"
+          - "*koin*"
+    # Ignore specific dependencies
+    ignore:
+      # Ignore major version updates for stable dependencies
+      - dependency-name: "com.android.tools.build:gradle"
+        update-types: ["version-update:semver-major"]
+      # Ignore specific versions with known issues
+      # - dependency-name: "androidx.compose.ui:ui"
+      #   versions: ["1.5.0"]
+
+  # GitHub Actions workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Warsaw"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "rkociniewski"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # Docker (if using Docker for CI)
+  # - package-ecosystem: "docker"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #   labels:
+  #     - "dependencies"
+  #     - "docker"
+
+# Advanced configuration options:
+# - Rebase strategy: Dependabot will rebase PRs when they have conflicts
+# - Target branch: Specify which branch to target (default is default branch)
+# - Registries: Configure private package registries if needed

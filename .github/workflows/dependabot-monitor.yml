@@ -1,0 +1,146 @@
+name: Dependabot Monitor
+
+on:
+  schedule:
+    # Run every Monday at 10:00 to check Dependabot status
+    - cron: '0 10 * * 1'
+  workflow_dispatch:
+
+jobs:
+  check-outdated-prs:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Check for stale Dependabot PRs
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              sort: 'created',
+              direction: 'asc'
+            });
+
+            const dependabotPRs = prs.filter(pr =>
+              pr.user.login === 'dependabot[bot]' &&
+              new Date(pr.created_at) < sevenDaysAgo
+            );
+
+            if (dependabotPRs.length > 0) {
+              console.log(`Found ${dependabotPRs.length} stale Dependabot PRs`);
+
+              let message = `## 📊 Dependabot Status Report\n\n`;
+              message += `Found **${dependabotPRs.length}** Dependabot PR(s) older than 7 days:\n\n`;
+
+              for (const pr of dependabotPRs) {
+                const age = Math.floor((Date.now() - new Date(pr.created_at)) / (1000 * 60 * 60 * 24));
+                message += `- [#${pr.number}](${pr.html_url}) - ${pr.title} (${age} days old)\n`;
+              }
+
+              message += `\n⚠️ **Action required**: Please review and merge or close these PRs.\n`;
+
+              // Create or update issue
+              const issues = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'dependabot-monitor'
+              });
+
+              if (issues.data.length > 0) {
+                // Update existing issue
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issues.data[0].number,
+                  body: message
+                });
+              } else {
+                // Create new issue
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: '📊 Dependabot PRs Need Attention',
+                  body: message,
+                  labels: ['dependabot-monitor', 'needs-review']
+                });
+              }
+            } else {
+              console.log('No stale Dependabot PRs found');
+            }
+
+  update-statistics:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Generate Dependabot statistics
+        uses: actions/github-script@v8
+        with:
+          script: |
+            // Get all Dependabot PRs from last 30 days
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'all',
+              sort: 'created',
+              direction: 'desc',
+              per_page: 100
+            });
+
+            const dependabotPRs = prs.filter(pr =>
+              pr.user.login === 'dependabot[bot]' &&
+              new Date(pr.created_at) > thirtyDaysAgo
+            );
+
+            const stats = {
+              total: dependabotPRs.length,
+              merged: dependabotPRs.filter(pr => pr.merged_at).length,
+              closed: dependabotPRs.filter(pr => pr.state === 'closed' && !pr.merged_at).length,
+              open: dependabotPRs.filter(pr => pr.state === 'open').length,
+              patchUpdates: 0,
+              minorUpdates: 0,
+              majorUpdates: 0
+            };
+
+            // Count update types from PR titles
+            dependabotPRs.forEach(pr => {
+              if (pr.title.includes('patch')) stats.patchUpdates++;
+              else if (pr.title.includes('minor')) stats.minorUpdates++;
+              else if (pr.title.includes('major')) stats.majorUpdates++;
+            });
+
+            // Calculate merge rate
+            const mergeRate = stats.total > 0
+              ? ((stats.merged / stats.total) * 100).toFixed(1)
+              : 0;
+
+            console.log('Dependabot Statistics (Last 30 days):');
+            console.log(`Total PRs: ${stats.total}`);
+            console.log(`Merged: ${stats.merged} (${mergeRate}%)`);
+            console.log(`Closed: ${stats.closed}`);
+            console.log(`Open: ${stats.open}`);
+            console.log(`Patch: ${stats.patchUpdates}`);
+            console.log(`Minor: ${stats.minorUpdates}`);
+            console.log(`Major: ${stats.majorUpdates}`);
+
+            // Save to job summary
+            await core.summary
+              .addHeading('📊 Dependabot Statistics (Last 30 Days)')
+              .addTable([
+                [{data: 'Metric', header: true}, {data:
