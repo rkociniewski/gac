@@ -1,0 +1,71 @@
+# CodeQL Configuration
+# Advanced configuration for custom queries and exclusions
+
+name: "CodeQL Config for Android"
+
+# Disable default queries and use only custom ones
+# disable-default-queries: true
+
+# Query suites to run
+queries:
+  - uses: security-extended
+  - uses: security-and-quality
+
+# Custom query packs (optional)
+# packs:
+#   - codeql/java-queries
+
+# Paths to exclude from analysis
+paths-ignore:
+  - '**/build/**'
+  - '**/generated/**'
+  - '**/test/**'
+  - '**/androidTest/**'
+  - '**/*.gradle'
+  - '**/*.gradle.kts'
+  - '**/proguard-rules.pro'
+  - '**/*.md'
+  - '**/docs/**'
+
+# Paths to include (optional - only these will be analyzed)
+# paths:
+#   - 'app/src/main/**'
+#   - 'library/src/main/**'
+
+# Query filters - exclude specific queries
+# query-filters:
+#   - exclude:
+#       id: java/unused-local-variable
+#   - exclude:
+#       problem.severity: recommendation
+
+# Additional configuration for Android
+android:
+  # Enable Android-specific security checks
+  security-checks: true
+
+  # Minimum API level to consider
+  min-api-level: 24
+
+# Java/Kotlin specific settings
+java:
+  # Java version
+  version: 21
+
+  # Enable Kotlin analysis
+  kotlin: true
+
+# Performance tuning
+performance:
+  # Threads for analysis
+  threads: 0  # 0 = auto-detect
+
+  # Memory limit (MB)
+  ram: 4096
+
+  # Timeout for queries (seconds)
+  timeout: 900
+
+# Severity levels to report
+# Options: error, warning, recommendation, note
+min-severity: warning
