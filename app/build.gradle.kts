@@ -1,4 +1,3 @@
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
@@ -10,7 +9,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.detekt)
-    alias(libs.plugins.manes)
     alias(libs.plugins.dokka)
     alias(libs.plugins.test.logger)
     alias(libs.plugins.hilt)
@@ -96,12 +94,6 @@ detekt {
     autoCorrect = true
 }
 
-tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
-    rejectVersionIf {
-        isNonStable(candidate.version) && !isNonStable(currentVersion)
-    }
-}
-
 tasks.withType<Detekt>().configureEach {
     jvmTarget = JvmTarget.JVM_21.target
 }
@@ -143,9 +135,4 @@ testlogger {
     showCauses = false
     slowThreshold = 10000
     showSimpleNames = true
-}
-
-private fun isNonStable(version: String): Boolean {
-    return listOf("alpha", "beta", "rc", "cr", "m", "preview", "snapshot", "dev")
-        .any { version.lowercase().contains(it) }
 }
