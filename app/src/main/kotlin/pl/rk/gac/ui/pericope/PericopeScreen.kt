@@ -94,6 +94,7 @@ fun PericopeScreen(
             settings, {
                 viewModel.updateSettings(it)
             }, {
+                //
                 showSettingsDialog = false
                 viewModel.updateSettings(settings)
                 viewModel.drawPericope()

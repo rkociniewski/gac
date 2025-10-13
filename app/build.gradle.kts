@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
@@ -21,10 +23,10 @@ android {
 
     defaultConfig {
         applicationId = "pl.rk.gac"
-        minSdk = 28
+        minSdk = 31
         targetSdk = 36
-        versionCode = 18
-        versionName = "1.4.4"
+        versionCode = 19
+        versionName = "1.4.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -53,6 +55,13 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md}"
         }
     }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+
     buildToolsVersion = "36.0.0"
 }
 

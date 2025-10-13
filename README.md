@@ -25,7 +25,7 @@
 ## ⚙️ Configuration Options
 
 - **Additional Pericopes**: None / Always / Only if selected text is short.
-- **Threshold**: How many words is considered “short” (25–100).
+- **Threshold**: How many words are considered “short” (25–100).
 - **Draw Mode**: Via button, by rotating the screen, or both.
 - **Fallbacks**: Show next/previous if at Gospel's start or end.
 - **Display Mode**: Light, Dark, or System default.
