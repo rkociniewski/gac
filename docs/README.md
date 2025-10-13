@@ -85,7 +85,7 @@ Scripts are located in the `../scripts/` directory:
 
 ### Configuration
 
-- [Dependabot Config](../.github/dependabot.yml)
+- [Dependabot Config](../.github/dependabot/dependabot.yml)
 - [CodeQL Config](../.github/codeql/codeql-config.yml)
 - [Git Hooks Config](../.githooks/config)
 
