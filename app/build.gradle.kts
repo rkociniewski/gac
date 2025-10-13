@@ -23,8 +23,8 @@ android {
         applicationId = "pl.rk.gac"
         minSdk = 28
         targetSdk = 36
-        versionCode = 18
-        versionName = "1.4.4"
+        versionCode = 19
+        versionName = "1.4.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
