@@ -4,6 +4,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Locale
 
 plugins {
     alias(libs.plugins.android.application)
@@ -15,7 +16,39 @@ plugins {
     alias(libs.plugins.test.logger)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.ksp)
+    jacoco
 }
+
+val javaVersion: JavaVersion = JavaVersion.VERSION_21
+val exclusions = listOf(
+    "**/R.class",
+    "**/R$*.class",
+    "**/BuildConfig.*",
+    "**/Manifest*.*",
+    "**/*Test*.*",
+    "android/**/*.*",
+    "**/databinding/*",
+    "**/android/databinding/*Binding.*",
+    "**/BR.*",
+    "**/Br.*",
+    "**/*\$ViewInjector*.*",
+    "**/*\$ViewBinder*.*",
+    "**/Lambda$*.class",
+    "**/Lambda.class",
+    "**/*Lambda.class",
+    "**/*Lambda*.class",
+    "**/*_MembersInjector.class",
+    "**/Dagger*Component*.*",
+    "**/*Module_*Factory.class",
+    "**/di/module/*",
+    "**/*_Factory*.*",
+    "**/*Module*.*",
+    "**/*Dagger*.*",
+    "**/*Hilt*.*",
+    // Compose specifics
+    "**/*ComposableSingletons*.*",
+    "**/*_Impl*.*"
+)
 
 android {
     namespace = "pl.rk.gac"
@@ -25,8 +58,9 @@ android {
         applicationId = "pl.rk.gac"
         minSdk = 31
         targetSdk = 36
-        versionCode = 19
-        versionName = "1.4.5"
+        versionCode = 34
+        versionName = "1.7.4"
+        buildToolsVersion = "36.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -38,13 +72,28 @@ android {
                 "proguard-rules.pro"
             )
         }
+
+        debug {
+            enableAndroidTestCoverage = true
+            enableUnitTestCoverage = true
+        }
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+    }
+
+    kotlin {
+        jvmToolchain(21)
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
     }
-
 
     buildFeatures {
         compose = true
@@ -62,7 +111,14 @@ android {
         }
     }
 
-    buildToolsVersion = "36.0.0"
+    dependenciesInfo {
+        includeInApk = true
+        includeInBundle = true
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.12"
 }
 
 dependencies {
@@ -108,6 +164,167 @@ tasks.withType<Detekt>().configureEach {
 
 tasks.withType<DetektCreateBaselineTask>().configureEach {
     jvmTarget = JvmTarget.JVM_21.target
+}
+
+tasks.withType<Test> {
+    configure<JacocoTaskExtension> {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
+}
+
+androidComponents {
+    onVariants { variant ->
+        val variantName =
+            variant.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+        val testTaskName = "test${variantName}UnitTest"
+
+        tasks.register<JacocoReport>("jacoco${variantName}Report") {
+            dependsOn(testTaskName)
+
+            group = "Reporting"
+            description = "Generate Jacoco coverage report for the ${variant.name} build."
+
+            reports {
+                xml.required.set(true)
+                html.required.set(true)
+                csv.required.set(false)
+            }
+
+            // Source directories
+            sourceDirectories.setFrom(
+                files(
+                    "${project.projectDir}/src/main/java",
+                    "${project.projectDir}/src/main/kotlin",
+                    "${project.projectDir}/src/${variant.name}/java",
+                    "${project.projectDir}/src/${variant.name}/kotlin"
+                )
+            )
+
+            // Class directories
+            classDirectories.setFrom(
+                files(
+                fileTree("${layout.buildDirectory.get()}/intermediates/javac/${variant.name}") {
+                    exclude(exclusions)
+                },
+                fileTree("${layout.buildDirectory.get()}/tmp/kotlin-classes/${variant.name}") {
+                    exclude(exclusions)
+                }
+            ))
+
+            // Execution data
+            executionData.setFrom(
+                fileTree(layout.buildDirectory.get()) {
+                    include("**/*.exec", "**/*.ec")
+                }
+            )
+        }
+    }
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+
+    group = "Reporting"
+    description = "Generate Jacoco coverage report for debug build."
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*",
+        "**/databinding/*",
+        "**/android/databinding/*Binding.*",
+        "**/BR.*",
+        "**/*\$ViewInjector*.*",
+        "**/*\$ViewBinder*.*",
+        "**/Lambda$*.class",
+        "**/Lambda.class",
+        "**/*Lambda.class",
+        "**/*Lambda*.class",
+        "**/*_MembersInjector.class",
+        "**/Dagger*Component*.*",
+        "**/*Module_*Factory.class",
+        "**/di/module/*",
+        "**/*_Factory*.*",
+        "**/*Module*.*",
+        "**/*Dagger*.*",
+        "**/*Hilt*.*",
+        "**/*ComposableSingletons*.*",
+        "**/*_Impl*.*",
+        "**/hilt_aggregated_deps/*"
+    )
+
+    sourceDirectories.setFrom(files(
+        "${project.projectDir}/src/main/java",
+        "${project.projectDir}/src/main/kotlin"
+    ))
+
+    classDirectories.setFrom(files(
+        fileTree("${layout.buildDirectory.get()}/intermediates/javac/debug") {
+            exclude(fileFilter)
+        },
+        fileTree("${layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
+            exclude(fileFilter)
+        }
+    ))
+
+    executionData.setFrom(files(
+        "${layout.buildDirectory.get()}/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+    ))
+}
+
+tasks.register<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
+    dependsOn("jacocoTestReport")
+
+    sourceDirectories.setFrom(files(
+        "${project.projectDir}/src/main/java",
+        "${project.projectDir}/src/main/kotlin"
+    ))
+
+    executionData.setFrom(files(
+        "${layout.buildDirectory.get()}/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+    ))
+
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.75".toBigDecimal()
+            }
+        }
+        rule {
+            enabled = true
+            element = "CLASS"
+            includes = listOf("pl.rk.*")
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = "0.75".toBigDecimal()
+            }
+        }
+    }
+
+    classDirectories.setFrom(fileTree("${project.layout.buildDirectory}/intermediates/javac/debug"))
+    sourceDirectories.setFrom(files("src/main/java"))
+    executionData.setFrom(files("${project.layout.buildDirectory}/jacoco/testDebugUnitTest.exec"))
+}
+
+tasks.register("coverage") {
+    dependsOn("testDebugUnitTest", "jacocoTestReport", "jacocoTestCoverageVerification")
+}
+
+tasks.register("cleanReports") {
+    doLast {
+        delete("${layout.buildDirectory.get()}/reports")
+    }
 }
 
 dokka {
