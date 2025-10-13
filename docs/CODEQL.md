@@ -64,7 +64,7 @@ When CodeQL finds issues in a PR:
 1. PR checks show ❌ "CodeQL / Analyze (java-kotlin)"
 2. Bot comments with summary
 3. Click "Details" to see findings
-4. **PR cannot merge** until issues resolved
+4. **PR cannot merge** until issues are resolved
 
 ### In Security Tab
 
@@ -336,7 +336,7 @@ Every Monday, CodeQL:
 
 ### KPIs to Track
 
-- **Mean Time to Remediate (MTTR)**: Average time to fix alerts
+- **Meantime to Remediate (MTTR)**: Average time to fix alerts
 - **Open Alerts**: Current unresolved security issues
 - **Dismissed Alerts**: False positives or accepted risks
 - **Fixed Alerts**: Resolved security issues
@@ -384,7 +384,7 @@ CodeQL automatically comments on PRs with:
 
 **Problem**: Build fails during CodeQL analysis
 
-**Solution**:
+**Solution **:
 ```yaml
 # Add build configuration to workflow
 - name: Build project
@@ -400,7 +400,7 @@ CodeQL automatically comments on PRs with:
 
 **Problem**: CodeQL reports issues that aren't real vulnerabilities
 
-**Solution**:
+**Solution **:
 1. Review query documentation
 2. Add exclusions in config
 3. Dismiss with detailed comments

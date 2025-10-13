@@ -95,7 +95,7 @@ versionCode = MAJOR * 10000 + MINOR * 100 + PATCH
 versionCode = 10203  // for 1.2.3
 
 // Strategy 2: Incremental
-versionCode = 1, 2, 3, 4, 5...
+versionCode = 1; 2; 3; 4; 5
 
 // Strategy 3: Timestamp
 versionCode = 241010  // YYMMDD
@@ -304,7 +304,7 @@ val apiKey = getLocalProperty("API_KEY")
 val apiKey = System.getenv("API_KEY") ?: "default"
 
 // ✅ Encrypted preferences
-val encryptedSharedPrefs = EncryptedSharedPreferences.create(...)
+val encryptedSharedPrefs = EncryptedSharedPreferences.create()
 ```
 
 ### local.properties template:

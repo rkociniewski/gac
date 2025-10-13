@@ -149,7 +149,7 @@ This repository uses:
 
 ### Coordinated Disclosure
 
-We follow responsible disclosure:
+We follow the responsible disclosure:
 
 1. **Private Report** → Reporter notifies us privately
 2. **Acknowledgment** → We confirm within 48h
@@ -167,7 +167,7 @@ We follow responsible disclosure:
 - **Day 45**: Fix released
 - **Day 90**: Public disclosure
 
-Exceptions:
+Exceptions :
 - Critical issues may be disclosed sooner
 - Complex issues may need more time
 - Active exploitation accelerates timeline

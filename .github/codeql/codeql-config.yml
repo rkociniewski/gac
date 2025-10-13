@@ -36,7 +36,7 @@ query-filters:
   -
     exclude:
       problem.severity: recommendation
-  # Exclude specific Android queries that may timeout
+  # Exclude specific Android queries that may time out
   -
     exclude:
       id: java/android/implicit-pendingintent

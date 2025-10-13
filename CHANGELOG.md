@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.5] - 2025-10-11
+
+### ADDED
+
+- Qodama CI scripts
+
 ## [1.4.4] - 2025-10-13
 
 ### CHANGED
@@ -92,7 +98,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Add function extension isDarkTheme() for better support
 - Updated dependencies
 - Upgraded Gradle to 9.10
-- Updated ui.util to ui.helper
+- Updated `ui.util` to `ui.helper`
 - update README.md
 
 ### Fixed
@@ -139,7 +145,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Created tooltips for Settings
+- Create tooltips for Settings
 - Created mechanism to update config after change
 - Created Draw pericope settings to config
 
