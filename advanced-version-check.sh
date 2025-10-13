@@ -201,7 +201,6 @@ if [[ $BRANCH_NAME =~ ^(main|master|release/) ]]; then
             # Additional checks based on branch type
             if [[ $BRANCH_NAME =~ ^hotfix/ ]]; then
                 IFS='|' read -r r_major r_minor r_patch <<< "$(parse_semver "$REMOTE_NAME")"
-                IFS='|' read -r c_major c_minor c_patch <<< "$(parse_semver "$CURRENT_NAME")"
 
                 if [ "$c_major" != "$r_major" ] || [ "$c_minor" != "$r_minor" ]; then
                     echo -e "${YELLOW}⚠️  Warning: Hotfix should only bump patch version${NC}"
