@@ -1,6 +1,6 @@
 # 🎲 Gospel A Caso – Randomizer for Gospel passage
 
-[![version](https://img.shields.io/badge/version-1.4.1-yellow.svg)](https://semver.org)
+[![version](https://img.shields.io/badge/version-1.4.6-yellow.svg)](https://semver.org)
 [![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin)
 [![Build](https://github.com/rkociniewski/gac/actions/workflows/main.yml/badge.svg)](https://github.com/rkociniewski/gac/actions/workflows/main.yml)
 [![CodeQL](https://github.com/rkociniewski/gac/actions/workflows/codeql.yml/badge.svg)](https://github.com/rkociniewski/gac/actions/workflows/codeql.yml)

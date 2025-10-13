@@ -125,3 +125,19 @@ jobs:
           check_name: Unit Test Results
           comment_mode: always
           check_run: false
+
+      -
+        name: Check JaCoCo coverage
+        run: ./gradlew coverage
+
+      -
+        name: Generate JaCoCo coverage report
+        run: ./gradlew jacocoTestReport
+
+      -
+        name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: build/reports/jacoco/test/jacocoTestReport.xml
+          token: 58a70e9b-4847-4168-8c92-9d8d0fa9ae26
+          slug: rkociniewski/cinema-seat
