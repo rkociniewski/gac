@@ -40,7 +40,7 @@ git push origin main
 
 ## 📊 First Scan Results
 
-After first scan completes (~5-10 minutes):
+After the first scan completes (~5-10 minutes):
 
 ### If NO Issues Found ✅
 
@@ -253,8 +253,8 @@ gh api repos/:owner/:repo/code-scanning/alerts/ALERT_NUMBER
 ❌ **NOT OK to dismiss**:
 
 - "Too hard to fix"
-- "We'll fix it later"
-- "It's not important"
+- "We'll fix it later."
+- "It's not important."
 - Without security review
 
 ### How to Dismiss
@@ -297,7 +297,7 @@ Every Monday at 9 AM:
 - Automatic report generated
 - Issue created/updated
 - Lists all open alerts
-- Prioritizes by severity
+- Prioritized by severity
 
 ### Metrics to Track
 
@@ -375,7 +375,7 @@ Add to `.github/workflows/codeql.yml`:
 
 **Problem**: Workflow fails with build error
 
-**Solution**:
+**Solution **:
 
 ```yaml
 # Add to build step
@@ -391,9 +391,9 @@ Add to `.github/workflows/codeql.yml`:
 
 **Problem**: Analysis takes too long and times out after 30+ minutes
 
-**Symptom**: Workflow cancelled after loading many queries
+**Symptom**: Workflow canceled after loading many queries
 
-**Solutions**:
+**Solutions **:
 
 **Option 1: Increase timeout**
 
@@ -445,7 +445,7 @@ paths:
 
 **Problem**: Scan completes but no results
 
-**Solution**:
+**Solution **:
 
 1. Check if code scanning is enabled
 2. Verify permissions in workflow
@@ -456,7 +456,7 @@ paths:
 
 **Problem**: Overwhelmed by alerts
 
-**Solution**:
+**Solution **:
 
 ```
 Priority:

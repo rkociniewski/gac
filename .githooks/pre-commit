@@ -36,7 +36,7 @@ for file in $(git diff --cached --name-only --diff-filter=ACM); do
     if [ -f "$file" ]; then
         size=$(wc -c < "$file" 2>/dev/null || echo 0)
         if [ "$size" -gt "$MAX_SIZE" ]; then
-            echo -e "${RED}❌ File too large: $file ($(($size / 1048576))MB)${NC}"
+            echo -e "${RED}❌ File too large: $file ($($size / 1048576)MB)${NC}"
             echo "Files larger than 5MB should not be committed"
             exit 1
         fi

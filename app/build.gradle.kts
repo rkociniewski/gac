@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
@@ -21,7 +23,7 @@ android {
 
     defaultConfig {
         applicationId = "pl.rk.gac"
-        minSdk = 28
+        minSdk = 31
         targetSdk = 36
         versionCode = 19
         versionName = "1.4.5"
@@ -56,10 +58,6 @@ android {
 
     bundle {
         language {
-            // Specifies that the app bundle should not support
-            // configuration APKs for language resources. These
-            // resources are instead packaged with each base and
-            // dynamic feature APK.
             enableSplit = false
         }
     }

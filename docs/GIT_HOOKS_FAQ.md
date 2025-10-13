@@ -154,7 +154,7 @@ versionCode = 10203  // for version 1.2.3
 versionCode = 20000  // for version 2.0.0
 
 // Strategy 2: Simple incremental
-versionCode = 1, 2, 3, 4, 5...
+versionCode = 1; 2; 3; 4; 5
 
 // Strategy 3: Timestamp
 versionCode = 241010  // YYMMDD format
@@ -236,7 +236,7 @@ export=API_KEY="your_key"
 # 3. CI/CD Secrets (GitHub/GitLab)
 # Settings → Secrets → Actions
 # 4. Android Keystore (for signing)
-# Store keystore separately, reference in build
+#  Stores keystore separately, reference in build
 ```
 
 ### Q: How do I use secrets from local.properties?
@@ -285,10 +285,10 @@ val apiKey = BuildConfig.API_KEY
 - Reverting a breaking change
 
 ❌ **NOT OK to bypass:**
-- "I'm in a hurry"
+- "I'm in a hurry."
 - "Tests take too long"
-- "I'll fix it later"
-- "It's just a small change"
+- "I'll fix it later."
+- "It's just a small change."
 
 ### Q: How do I bypass hooks?
 
