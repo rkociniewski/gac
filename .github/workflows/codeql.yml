@@ -19,9 +19,8 @@ on:
       - '**.md'
       - 'docs/**'
   schedule:
-    # Run at 2 AM every Monday
     -
-      cron: '0 2 * * 1'
+      cron: '0 0 * * 0'
   workflow_dispatch:
 
 concurrency:

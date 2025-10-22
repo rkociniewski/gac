@@ -16,7 +16,7 @@ ij_formatter_off_tag = @formatter:off
 ij_formatter_on_tag = @formatter:on
 ij_formatter_tags_enabled = false
 
-[{*.kt,*.kts}]
+[*.{kt,kts}]
 # Follow official Kotlin style
 ij_kotlin_code_style_defaults = KOTLIN_OFFICIAL
 # Indentation and wrapping
@@ -39,7 +39,7 @@ ij_kotlin_spaces_around_when_arrow = true
 # Comments
 ij_kotlin_line_comment_add_space = true
 
-[{*.md,*.markdown}]
+[*.{md,markdown}]
 ij_markdown_force_one_space_after_blockquote_symbol = true
 ij_markdown_force_one_space_after_header_symbol = true
 ij_markdown_force_one_space_after_list_bullet = true
@@ -57,8 +57,7 @@ ij_markdown_min_lines_between_paragraphs = 1
 ij_markdown_wrap_text_if_long = true
 ij_markdown_wrap_text_inside_blockquotes = true
 
-[{*.yaml,*.yml}]
-# YAML standard formatting
+[*.{yml,yaml}]
 indent_size = 2
 # IntelliJ YAML formatting
 ij_yaml_keep_indents_on_empty_lines = false

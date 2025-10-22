@@ -98,6 +98,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [1.3.0] - 2025-05-22
 
 ### Added
+
 - Add Hilt dependency
 - Add GacApplication
 - Add localized context
@@ -106,6 +107,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Create AppLogger
 
 ### Changed
+
 - Using Dimensions object for dimensions
 - Add function extension isDarkTheme() for better support
 - Updated dependencies
@@ -114,10 +116,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - update README.md
 
 ### Fixed
+
 - Pretending screen dimming
 - Fixed some typos
 
 ### Removed
+
 - Delete context dependency in viewModel
 - Delete localViewModel
 - Delete log entries in strings.xml

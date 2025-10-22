@@ -441,6 +441,7 @@ git commit -m "feat: Add API integration with secure key storage"
 ```
 
 Shortcuts:
+
 - `Ctrl+K` - Commit
 - `Ctrl+Shift+K` - Commit and Push
 
@@ -519,6 +520,7 @@ versionCode = 1, 2, 3, 4, 5...
 ```
 
 **Option 3: Timestamp**
+
 ```kotlin
 // YYMMDD
 versionCode = 241010  // October 10, 2024
@@ -538,6 +540,7 @@ versionName = "1.2.3"           // Production
 ## 🎯 Best Practices Summary
 
 ### DO ✅
+
 1. Always use Conventional Commits
 2. Bump version before merging to main
 3. Test locally before pushing
@@ -547,6 +550,7 @@ versionName = "1.2.3"           // Production
 7. Commit often, small changes
 
 ### DON'T ❌
+
 1. Don't use `--no-verify` without reason
 2. Don't commit secrets
 3. Don't forget to bump version

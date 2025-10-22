@@ -5,7 +5,8 @@ version: 2
 
 updates:
   # Gradle dependencies (Kotlin, Android libraries, etc.)
-  - package-ecosystem: "gradle"
+  -
+    package-ecosystem: "gradle"
     directory: "/"
     schedule:
       interval: "weekly"
@@ -55,14 +56,16 @@ updates:
     # Ignore specific dependencies
     ignore:
       # Ignore major version updates for stable dependencies
-      - dependency-name: "com.android.tools.build:gradle"
-        update-types: ["version-update:semver-major"]
+      -
+        dependency-name: "com.android.tools.build:gradle"
+        update-types: [ "version-update:semver-major" ]
       # Ignore specific versions with known issues
       # - dependency-name: "androidx.compose.ui:ui"
       #   versions: ["1.5.0"]
 
   # GitHub Actions workflows
-  - package-ecosystem: "github-actions"
+  -
+    package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"

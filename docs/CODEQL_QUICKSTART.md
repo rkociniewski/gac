@@ -375,7 +375,7 @@ Add to `.github/workflows/codeql.yml`:
 
 **Problem**: Workflow fails with build error
 
-**Solution **:
+**Solution**:
 
 ```yaml
 # Add to build step
@@ -393,7 +393,7 @@ Add to `.github/workflows/codeql.yml`:
 
 **Symptom**: Workflow canceled after loading many queries
 
-**Solutions **:
+**Solutions**:
 
 **Option 1: Increase timeout**
 
@@ -445,7 +445,7 @@ paths:
 
 **Problem**: Scan completes but no results
 
-**Solution **:
+**Solution**:
 
 1. Check if code scanning is enabled
 2. Verify permissions in workflow
@@ -456,7 +456,7 @@ paths:
 
 **Problem**: Overwhelmed by alerts
 
-**Solution **:
+**Solution**:
 
 ```
 Priority:

@@ -26,11 +26,13 @@ import pl.rk.gac.model.Pericope
 @Composable
 fun PericopeItem(pericope: Pericope, isMain: Boolean, fontSize: Float) {
     val annotatedText = buildAnnotatedString {
-        withStyle(style = SpanStyle(
-            fontStyle = FontStyle.Italic,
-            fontSize = (fontSize * 1.1).sp,
-            color = MaterialTheme.colorScheme.primary
-        )) {
+        withStyle(
+            style = SpanStyle(
+                fontStyle = FontStyle.Italic,
+                fontSize = (fontSize * 1.1).sp,
+                color = MaterialTheme.colorScheme.primary
+            )
+        ) {
             append("${pericope.reference} — ${pericope.title}")
         }
         append("\n")

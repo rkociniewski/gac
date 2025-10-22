@@ -5,6 +5,7 @@ This project uses [GitHub CodeQL](https://codeql.github.com/) for automated secu
 ## 📋 What is CodeQL?
 
 CodeQL is GitHub's semantic code analysis engine that:
+
 - 🔍 Scans code for security vulnerabilities
 - 🐛 Detects common coding errors
 - 🛡️ Identifies potential exploits
@@ -16,6 +17,7 @@ CodeQL is GitHub's semantic code analysis engine that:
 ### Automatic Scans
 
 CodeQL runs automatically:
+
 1. **On every push** to `main`, `develop`, `release/**`
 2. **On every pull request** to protected branches
 3. **Weekly schedule** - Every Monday at 2 AM
@@ -36,6 +38,7 @@ CodeQL runs automatically:
 CodeQL checks for:
 
 ### High Severity
+
 - SQL Injection
 - Command Injection
 - Path Traversal
@@ -44,6 +47,7 @@ CodeQL checks for:
 - Weak cryptography
 
 ### Medium Severity
+
 - Information exposure
 - Missing authentication
 - Insecure data storage
@@ -51,6 +55,7 @@ CodeQL checks for:
 - Missing input validation
 
 ### Low Severity
+
 - Code quality issues
 - Resource leaks
 - Null pointer dereferences
@@ -61,6 +66,7 @@ CodeQL checks for:
 ### In Pull Requests
 
 When CodeQL finds issues in a PR:
+
 1. PR checks show ❌ "CodeQL / Analyze (java-kotlin)"
 2. Bot comments with summary
 3. Click "Details" to see findings
@@ -108,6 +114,7 @@ References:
 ### Basic Setup
 
 Already configured! CodeQL runs automatically with:
+
 - **Query suite**: `security-extended`
 - **Languages**: Java, Kotlin
 - **Schedule**: Weekly on Monday
@@ -180,10 +187,10 @@ codeql bqrs decode results.sarif
 
 | Severity | Response Time | Max Resolution Time |
 |----------|---------------|---------------------|
-| Critical | Immediate | 24 hours |
-| High | 1 day | 1 week |
-| Medium | 1 week | 1 month |
-| Low | 1 month | Next release |
+| Critical | Immediate     | 24 hours            |
+| High     | 1 day         | 1 week              |
+| Medium   | 1 week        | 1 month             |
+| Low      | 1 month       | Next release        |
 
 ### Workflow
 
@@ -221,6 +228,7 @@ If an alert is a false positive:
 5. Submit
 
 **Example dismissal comment:**
+
 ```
 This WebView is only used for trusted, internal content loaded
 from assets/. JavaScript is required for the interactive tutorial.
@@ -251,12 +259,14 @@ All content is validated and sanitized before loading.
 ### 1. Hardcoded Credentials
 
 ❌ **Bad:**
+
 ```kotlin
 val apiKey = "sk_live_1234567890abcdef"
 val password = "admin123"
 ```
 
 ✅ **Good:**
+
 ```kotlin
 val apiKey = BuildConfig.API_KEY
 val password = EncryptedSharedPreferences.getString("password")
@@ -265,12 +275,14 @@ val password = EncryptedSharedPreferences.getString("password")
 ### 2. SQL Injection
 
 ❌ **Bad:**
+
 ```kotlin
 val query = "SELECT * FROM users WHERE id = $userId"
 database.rawQuery(query, null)
 ```
 
 ✅ **Good:**
+
 ```kotlin
 val query = "SELECT * FROM users WHERE id = ?"
 database.rawQuery(query, arrayOf(userId))
@@ -279,12 +291,14 @@ database.rawQuery(query, arrayOf(userId))
 ### 3. Insecure WebView
 
 ❌ **Bad:**
+
 ```kotlin
 webView.settings.javaScriptEnabled = true
 webView.loadUrl(untrustedUrl)
 ```
 
 ✅ **Good:**
+
 ```kotlin
 webView.settings.apply {
     javaScriptEnabled = false  // Only if needed
@@ -298,12 +312,14 @@ webView.loadUrl(sanitizeUrl(trustedUrl))
 ### 4. Weak Cryptography
 
 ❌ **Bad:**
+
 ```kotlin
 val cipher = Cipher.getInstance("DES")  // Weak
 val md5 = MessageDigest.getInstance("MD5")  // Broken
 ```
 
 ✅ **Good:**
+
 ```kotlin
 val cipher = Cipher.getInstance("AES/GCM/NoPadding")
 val hash = MessageDigest.getInstance("SHA-256")
@@ -312,12 +328,14 @@ val hash = MessageDigest.getInstance("SHA-256")
 ### 5. Insecure Random
 
 ❌ **Bad:**
+
 ```kotlin
 val random = Random()
 val token = random.nextInt()
 ```
 
 ✅ **Good:**
+
 ```kotlin
 val random = SecureRandom()
 val token = ByteArray(32)
@@ -329,6 +347,7 @@ random.nextBytes(token)
 ### Weekly Security Report
 
 Every Monday, CodeQL:
+
 1. Scans entire codebase
 2. Generates SARIF report
 3. Updates Security dashboard
@@ -344,6 +363,7 @@ Every Monday, CodeQL:
 ### Dashboard
 
 View metrics at:
+
 - **Insights** → **Security** → **Code scanning**
 - Filter by time period, severity, state
 
@@ -367,6 +387,7 @@ branches:
 ### Dependabot
 
 CodeQL works with Dependabot:
+
 - Dependabot updates dependencies
 - CodeQL scans for new vulnerabilities
 - Alerts created if update introduces issues
@@ -374,6 +395,7 @@ CodeQL works with Dependabot:
 ### Pull Request Comments
 
 CodeQL automatically comments on PRs with:
+
 - Summary of findings
 - Link to detailed report
 - Recommended actions
@@ -384,7 +406,8 @@ CodeQL automatically comments on PRs with:
 
 **Problem**: Build fails during CodeQL analysis
 
-**Solution **:
+**Solution**:
+
 ```yaml
 # Add build configuration to workflow
 - name: Build project
@@ -400,7 +423,8 @@ CodeQL automatically comments on PRs with:
 
 **Problem**: CodeQL reports issues that aren't real vulnerabilities
 
-**Solution **:
+**Solution**:
+
 1. Review query documentation
 2. Add exclusions in config
 3. Dismiss with detailed comments
@@ -411,6 +435,7 @@ CodeQL automatically comments on PRs with:
 **Problem**: CodeQL times out (>30 minutes)
 
 **Solution**:
+
 ```yaml
 # Increase timeout
 timeout-minutes: 60
@@ -431,12 +456,14 @@ paths-ignore:
 ## 🤝 Support
 
 **Questions about an alert?**
+
 1. Read the alert description
 2. Check CodeQL documentation
 3. Ask in #security-team Slack
 4. Create issue with `security` label
 
 **Need to override an alert?**
+
 1. Document why it's safe
 2. Get security team approval
 3. Dismiss with detailed comment

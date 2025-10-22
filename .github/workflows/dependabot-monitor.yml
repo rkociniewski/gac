@@ -2,8 +2,8 @@ name: Dependabot Monitor
 
 on:
   schedule:
-    # Run every Monday at 10:00 to check Dependabot status
-    - cron: '0 10 * * 1'
+    -
+      cron: '0 0 * * 0'
   workflow_dispatch:
 
 jobs:
@@ -14,7 +14,8 @@ jobs:
       issues: write
 
     steps:
-      - name: Check for stale Dependabot PRs
+      -
+        name: Check for stale Dependabot PRs
         uses: actions/github-script@v8
         with:
           script: |
@@ -63,18 +64,39 @@ jobs:
                   issue_number: issues.data[0].number,
                   body: message
                 });
+                console.log(`Updated issue #${issues.data[0].number}`);
               } else {
                 // Create new issue
-                await github.rest.issues.create({
+                const newIssue = await github.rest.issues.create({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   title: '📊 Dependabot PRs Need Attention',
                   body: message,
                   labels: ['dependabot-monitor', 'needs-review']
                 });
+                console.log(`Created issue #${newIssue.data.number}`);
               }
             } else {
               console.log('No stale Dependabot PRs found');
+
+              // Close existing monitoring issue if no stale PRs
+              const issues = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'dependabot-monitor'
+              });
+
+              if (issues.data.length > 0) {
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issues.data[0].number,
+                  state: 'closed',
+                  body: '✅ All Dependabot PRs have been addressed. Closing this monitoring issue.'
+                });
+                console.log(`Closed issue #${issues.data[0].number} - no stale PRs`);
+              }
             }
 
   update-statistics:
@@ -83,10 +105,12 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout
+      -
+        name: Checkout
         uses: actions/checkout@v5
 
-      - name: Generate Dependabot statistics
+      -
+        name: Generate Dependabot statistics
         uses: actions/github-script@v8
         with:
           script: |
@@ -143,4 +167,20 @@ jobs:
             await core.summary
               .addHeading('📊 Dependabot Statistics (Last 30 Days)')
               .addTable([
-                [{data: 'Metric', header: true}, {data:
+                [{data: 'Metric', header: true}, {data: 'Count', header: true}, {data: 'Percentage', header: true}],
+                ['Total PRs', stats.total.toString(), '100%'],
+                ['✅ Merged', stats.merged.toString(), `${mergeRate}%`],
+                ['❌ Closed (not merged)', stats.closed.toString(), stats.total > 0 ? `${((stats.closed / stats.total) * 100).toFixed(1)}%` : '0%'],
+                ['🔄 Open', stats.open.toString(), stats.total > 0 ? `${((stats.open / stats.total) * 100).toFixed(1)}%` : '0%'],
+                ['🔧 Patch Updates', stats.patchUpdates.toString(), stats.total > 0 ? `${((stats.patchUpdates / stats.total) * 100).toFixed(1)}%` : '0%'],
+                ['📦 Minor Updates', stats.minorUpdates.toString(), stats.total > 0 ? `${((stats.minorUpdates / stats.total) * 100).toFixed(1)}%` : '0%'],
+                ['🚀 Major Updates', stats.majorUpdates.toString(), stats.total > 0 ? `${((stats.majorUpdates / stats.total) * 100).toFixed(1)}%` : '0%']
+              ])
+              .addRaw('\n\n')
+              .addQuote(`Merge Rate: ${mergeRate}% | Generated on ${new Date().toLocaleString()}`)
+              .write();
+
+            // Store stats as output for potential future use
+            core.setOutput('total_prs', stats.total);
+            core.setOutput('merge_rate', mergeRate);
+            core.setOutput('open_prs', stats.open);
