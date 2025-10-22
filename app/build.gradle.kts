@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
@@ -58,8 +56,8 @@ android {
         applicationId = "pl.rk.gac"
         minSdk = 31
         targetSdk = 36
-        versionCode = 21
-        versionName = "1.4.7"
+        versionCode = 22
+        versionName = "1.4.8"
         buildToolsVersion = "36.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -204,13 +202,13 @@ androidComponents {
             // Class directories
             classDirectories.setFrom(
                 files(
-                fileTree("${layout.buildDirectory.get()}/intermediates/javac/${variant.name}") {
-                    exclude(exclusions)
-                },
-                fileTree("${layout.buildDirectory.get()}/tmp/kotlin-classes/${variant.name}") {
-                    exclude(exclusions)
-                }
-            ))
+                    fileTree("${layout.buildDirectory.get()}/intermediates/javac/${variant.name}") {
+                        exclude(exclusions)
+                    },
+                    fileTree("${layout.buildDirectory.get()}/tmp/kotlin-classes/${variant.name}") {
+                        exclude(exclusions)
+                    }
+                ))
 
             // Execution data
             executionData.setFrom(
@@ -263,12 +261,15 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         "**/hilt_aggregated_deps/*"
     )
 
-    sourceDirectories.setFrom(files(
-        "${project.projectDir}/src/main/java",
-        "${project.projectDir}/src/main/kotlin"
-    ))
+    sourceDirectories.setFrom(
+        files(
+            "${project.projectDir}/src/main/java",
+            "${project.projectDir}/src/main/kotlin"
+        )
+    )
 
-    classDirectories.setFrom(files(
+    classDirectories.setFrom(
+        files(
         fileTree("${layout.buildDirectory.get()}/intermediates/javac/debug") {
             exclude(fileFilter)
         },
@@ -277,22 +278,28 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         }
     ))
 
-    executionData.setFrom(files(
-        "${layout.buildDirectory.get()}/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
-    ))
+    executionData.setFrom(
+        files(
+            "${layout.buildDirectory.get()}/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+        )
+    )
 }
 
 tasks.register<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
     dependsOn("jacocoTestReport")
 
-    sourceDirectories.setFrom(files(
-        "${project.projectDir}/src/main/java",
-        "${project.projectDir}/src/main/kotlin"
-    ))
+    sourceDirectories.setFrom(
+        files(
+            "${project.projectDir}/src/main/java",
+            "${project.projectDir}/src/main/kotlin"
+        )
+    )
 
-    executionData.setFrom(files(
-        "${layout.buildDirectory.get()}/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
-    ))
+    executionData.setFrom(
+        files(
+            "${layout.buildDirectory.get()}/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+        )
+    )
 
     violationRules {
         rule {
@@ -329,7 +336,7 @@ tasks.register("cleanReports") {
 
 dokka {
     dokkaSourceSets.main {
-        jdkVersion.set(java.targetCompatibility.toString().toInt()) // Used for linking to JDK documentation
+        jdkVersion.set(javaVersion.toString().toInt()) // Used for linking to JDK documentation
         skipDeprecated.set(false)
     }
 

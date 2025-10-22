@@ -14,7 +14,8 @@ Thank you for your interest in contributing to Rosario! 🙏
 
 ## 📜 Code of Conduct
 
-This project follows a Code of Conduct that all contributors are expected to uphold. Please be respectful and constructive in all interactions.
+This project follows a Code of Conduct that all contributors are expected to uphold. Please be respectful and
+constructive in all interactions.
 
 ## 🚀 Getting Started
 
@@ -101,16 +102,16 @@ We use [Conventional Commits](https://www.conventionalcommits.org/):
 
 ### Types
 
-| Type | Description | Example |
-|------|-------------|---------|
-| `feat` | New feature | `feat: Add Divine Mercy prayer` |
-| `fix` | Bug fix | `fix: Resolve crash on rotation` |
-| `docs` | Documentation | `docs: Update README` |
-| `style` | Code style | `style: Apply ktlint formatting` |
-| `refactor` | Code refactoring | `refactor: Simplify ViewModel` |
-| `test` | Tests | `test: Add prayer navigation tests` |
-| `chore` | Maintenance | `chore: Update dependencies` |
-| `ci` | CI/CD | `ci: Update workflows` |
+| Type       | Description      | Example                             |
+|------------|------------------|-------------------------------------|
+| `feat`     | New feature      | `feat: Add Divine Mercy prayer`     |
+| `fix`      | Bug fix          | `fix: Resolve crash on rotation`    |
+| `docs`     | Documentation    | `docs: Update README`               |
+| `style`    | Code style       | `style: Apply ktlint formatting`    |
+| `refactor` | Code refactoring | `refactor: Simplify ViewModel`      |
+| `test`     | Tests            | `test: Add prayer navigation tests` |
+| `chore`    | Maintenance      | `chore: Update dependencies`        |
+| `ci`       | CI/CD            | `ci: Update workflows`              |
 
 ### Examples
 
@@ -138,6 +139,7 @@ Users will need to reconfigure their preferences."
 ### Git Hooks
 
 Pre-commit hooks automatically check:
+
 - ✅ Commit message format
 - ✅ No debug statements (except Logger)
 - ✅ No secrets in code
@@ -145,6 +147,7 @@ Pre-commit hooks automatically check:
 - ✅ No merge conflicts
 
 To bypass (use sparingly):
+
 ```bash
 git commit --no-verify -m "emergency fix"
 ```

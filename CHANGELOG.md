@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.8] - 2025-10-22
+
+### ADDED
+
+- Created CI GitHub Actions for adding labels
+
 ## [1.4.7] - 2025-10-14
 
 ### CHANGED
@@ -98,6 +104,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [1.3.0] - 2025-05-22
 
 ### Added
+
 - Add Hilt dependency
 - Add GacApplication
 - Add localized context
@@ -106,6 +113,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Create AppLogger
 
 ### Changed
+
 - Using Dimensions object for dimensions
 - Add function extension isDarkTheme() for better support
 - Updated dependencies
@@ -114,10 +122,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - update README.md
 
 ### Fixed
+
 - Pretending screen dimming
 - Fixed some typos
 
 ### Removed
+
 - Delete context dependency in viewModel
 - Delete localViewModel
 - Delete log entries in strings.xml

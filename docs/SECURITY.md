@@ -28,6 +28,7 @@ Instead:
 ### What to Include
 
 Please provide:
+
 - Description of the vulnerability
 - Steps to reproduce
 - Potential impact
@@ -36,12 +37,12 @@ Please provide:
 
 ### Response Timeline
 
-| Stage | Timeline |
-|-------|----------|
-| Initial Response | 48 hours |
-| Triage & Assessment | 1 week |
-| Fix Development | 2-4 weeks |
-| Public Disclosure | 30-90 days |
+| Stage               | Timeline   |
+|---------------------|------------|
+| Initial Response    | 48 hours   |
+| Triage & Assessment | 1 week     |
+| Fix Development     | 2-4 weeks  |
+| Public Disclosure   | 30-90 days |
 
 ## 🛡️ Security Measures
 
@@ -64,17 +65,18 @@ This repository uses:
 
 ## 🎯 Supported Versions
 
-| Version | Supported | Security Updates |
-|---------|-----------|------------------|
-| 2.x.x | ✅ Yes | Active |
-| 1.x.x | ⚠️ Limited | Critical only |
-| < 1.0 | ❌ No | End of life |
+| Version | Supported  | Security Updates |
+|---------|------------|------------------|
+| 2.x.x   | ✅ Yes      | Active           |
+| 1.x.x   | ⚠️ Limited | Critical only    |
+| < 1.0   | ❌ No       | End of life      |
 
 ## 🔐 Security Best Practices
 
 ### For Contributors
 
 **Before Committing**:
+
 ```bash
 # 1. No hardcoded secrets
 ❌ val apiKey = "sk_live_abc123"
@@ -90,6 +92,7 @@ This repository uses:
 ```
 
 **During Review**:
+
 - Check for security issues
 - Verify input validation
 - Review permission usage
@@ -99,6 +102,7 @@ This repository uses:
 ### For Reviewers
 
 **Security Checklist**:
+
 - [ ] No hardcoded credentials
 - [ ] Input validation present
 - [ ] SQL parameterized
@@ -113,24 +117,28 @@ This repository uses:
 ### Severity Levels
 
 **Critical** 🔴
+
 - Remote code execution
 - Authentication bypass
 - Data breach
 - **Response**: Immediate (patch within 24h)
 
 **High** 🟠
+
 - Privilege escalation
 - XSS vulnerabilities
 - SQL injection
 - **Response**: 1 week
 
 **Medium** 🟡
+
 - Information disclosure
 - CSRF
 - Weak cryptography
 - **Response**: 1 month
 
 **Low** 🟢
+
 - Minor info leaks
 - Missing security headers
 - **Response**: Next release
@@ -167,7 +175,8 @@ We follow the responsible disclosure:
 - **Day 45**: Fix released
 - **Day 90**: Public disclosure
 
-Exceptions :
+Exceptions:
+
 - Critical issues may be disclosed sooner
 - Complex issues may need more time
 - Active exploitation accelerates timeline
@@ -183,16 +192,19 @@ We thank these security researchers:
 ## 📚 Security Resources
 
 ### Documentation
+
 - [CodeQL Guide](CODEQL.md)
 - [Git Hooks Security](GIT_HOOKS.md)
 - [Dependabot Config](DEPENDABOT.md)
 
 ### External Resources
+
 - [OWASP Mobile Top 10](https://owasp.org/www-project-mobile-top-10/)
 - [Android Security Guide](https://developer.android.com/topic/security)
 - [CWE Top 25](https://cwe.mitre.org/top25/)
 
 ### Training
+
 - [Secure Coding in Kotlin](link)
 - [Android Security Best Practices](link)
 - [Mobile App Security](link)
@@ -209,6 +221,7 @@ We thank these security researchers:
 ### Safe Harbor
 
 We support security research and will not pursue legal action against researchers who:
+
 - Make good faith efforts to comply with this policy
 - Do not access or modify user data without permission
 - Report vulnerabilities promptly
@@ -217,12 +230,14 @@ We support security research and will not pursue legal action against researcher
 ### Scope
 
 **In Scope**:
+
 - This repository's code
 - Released applications
 - CI/CD pipeline
 - Dependencies
 
 **Out of Scope**:
+
 - Third-party services
 - Physical attacks
 - Social engineering
@@ -231,6 +246,7 @@ We support security research and will not pursue legal action against researcher
 ## 📝 Version History
 
 ### v1.0.0 (2024-10-11)
+
 - Initial security policy
 - Added CodeQL scanning
 - Implemented Dependabot

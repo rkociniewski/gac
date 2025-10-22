@@ -36,18 +36,19 @@ mv .git/hooks/pre-commit.disabled .git/hooks/pre-commit
 ```
 
 ### Types
-| Type | Usage | Example |
-|------|-------|---------|
-| `feat` | New feature | `feat: Add dark mode` |
-| `fix` | Bug fix | `fix: Resolve crash on startup` |
-| `docs` | Documentation | `docs: Update README` |
-| `style` | Formatting | `style: Apply ktlint` |
-| `refactor` | Refactoring | `refactor: Simplify auth logic` |
-| `perf` | Optimization | `perf: Optimize image loading` |
-| `test` | Tests | `test: Add unit tests` |
-| `build` | Build system | `build: Update Gradle` |
-| `ci` | CI/CD | `ci: Update workflows` |
-| `chore` | Other | `chore: Update dependencies` |
+
+| Type       | Usage         | Example                         |
+|------------|---------------|---------------------------------|
+| `feat`     | New feature   | `feat: Add dark mode`           |
+| `fix`      | Bug fix       | `fix: Resolve crash on startup` |
+| `docs`     | Documentation | `docs: Update README`           |
+| `style`    | Formatting    | `style: Apply ktlint`           |
+| `refactor` | Refactoring   | `refactor: Simplify auth logic` |
+| `perf`     | Optimization  | `perf: Optimize image loading`  |
+| `test`     | Tests         | `test: Add unit tests`          |
+| `build`    | Build system  | `build: Update Gradle`          |
+| `ci`       | CI/CD         | `ci: Update workflows`          |
+| `chore`    | Other         | `chore: Update dependencies`    |
 
 ### Examples
 
@@ -80,12 +81,12 @@ mv .git/hooks/pre-commit.disabled .git/hooks/pre-commit
 
 ### Branch → Version Mapping
 
-| Branch | Version Bump | Example |
-|--------|--------------|---------|
-| `hotfix/*` | PATCH | 1.2.3 → 1.2.4 |
-| `release/*` | MINOR | 1.2.3 → 1.3.0 |
-| `feature/*` | (in release) | - |
-| `main` | Bump both! | versionCode + versionName |
+| Branch      | Version Bump | Example                   |
+|-------------|--------------|---------------------------|
+| `hotfix/*`  | PATCH        | 1.2.3 → 1.2.4             |
+| `release/*` | MINOR        | 1.2.3 → 1.3.0             |
+| `feature/*` | (in release) | -                         |
+| `main`      | Bump both!   | versionCode + versionName |
 
 ### versionCode Strategies
 
@@ -153,13 +154,13 @@ git push origin feature/user-profile
 
 ### What is checked?
 
-| Check | Blocks? | Description |
-|-------|---------|-------------|
+| Check            | Blocks?    | Description                |
+|------------------|------------|----------------------------|
 | Debug statements | ⚠️ Warning | `println`, `Log.d`, `TODO` |
-| Large files | ❌ Error | Files > 5MB |
-| Secrets | ❌ Error | API keys, passwords |
-| Merge conflicts | ❌ Error | `<<<<<<<` markers |
-| Code style | ❌ Error | ktlint (if installed) |
+| Large files      | ❌ Error    | Files > 5MB                |
+| Secrets          | ❌ Error    | API keys, passwords        |
+| Merge conflicts  | ❌ Error    | `<<<<<<<` markers          |
+| Code style       | ❌ Error    | ktlint (if installed)      |
 
 ### Bypass Checks
 

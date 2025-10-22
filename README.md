@@ -1,6 +1,6 @@
 # 🎲 Gospel A Caso – Randomizer for Gospel passage
 
-[![version](https://img.shields.io/badge/version-1.4.6-yellow.svg)](https://semver.org)
+[![version](https://img.shields.io/badge/version-1.4.8-yellow.svg)](https://semver.org)
 [![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin)
 [![Build](https://github.com/rkociniewski/gac/actions/workflows/main.yml/badge.svg)](https://github.com/rkociniewski/gac/actions/workflows/main.yml)
 [![CodeQL](https://github.com/rkociniewski/gac/actions/workflows/codeql.yml/badge.svg)](https://github.com/rkociniewski/gac/actions/workflows/codeql.yml)
@@ -10,7 +10,9 @@
 [![Gradle](https://img.shields.io/badge/Gradle-9.1.0-blue?logo=gradle)](https://gradle.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-**Gospel A Caso** is a minimalist Android app that helps you read the Gospel by selecting random Gospel pericopes (passages) — either on demand or triggered by device rotation. It supports multiple configuration modes and is inspired by spiritual reflection, randomness, and simplicity.
+**Gospel A Caso** is a minimalist Android app that helps you read the Gospel by selecting random Gospel pericopes (
+passages) — either on demand or triggered by device rotation. It supports multiple configuration modes and is inspired
+by spiritual reflection, randomness, and simplicity.
 
 ## ✨ Features
 
@@ -162,6 +164,7 @@ See [GIT_HOOKS.md](docs/GIT_HOOKS.md) for details.
 ### Pre-commit Checks
 
 Git hooks automatically check:
+
 - ✅ Commit message format (Conventional Commits)
 - ✅ No debug statements (excluding Logger classes)
 - ✅ No secrets in code
@@ -169,6 +172,7 @@ Git hooks automatically check:
 - ✅ No merge conflicts
 
 Bypass only in emergencies:
+
 ```bash
 git commit --no-verify -m "hotfix: Critical fix"
 ```
@@ -221,6 +225,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 We use [Semantic Versioning](http://semver.org/) for versioning.
 
 Version format: `MAJOR.MINOR.PATCH`
+
 - **MAJOR**: Breaking changes
 - **MINOR**: New features (backward compatible)
 - **PATCH**: Bug fixes
