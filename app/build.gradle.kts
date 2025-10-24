@@ -11,7 +11,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.detekt)
     alias(libs.plugins.dokka)
-    alias(libs.plugins.test.logger)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.ksp)
     jacoco
@@ -43,21 +42,20 @@ val exclusions = listOf(
     "**/*Module*.*",
     "**/*Dagger*.*",
     "**/*Hilt*.*",
-    // Compose specifics
     "**/*ComposableSingletons*.*",
     "**/*_Impl*.*"
 )
 
 android {
-    namespace = "pl.rk.gac"
+    namespace = "rk.powermilk.gac"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "pl.rk.gac"
+        applicationId = "rk.powermilk.gac"
         minSdk = 31
         targetSdk = 36
-        versionCode = 22
-        versionName = "1.4.8"
+        versionCode = 23
+        versionName = "1.4.9"
         buildToolsVersion = "36.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -115,10 +113,6 @@ android {
     }
 }
 
-jacoco {
-    toolVersion = "0.8.12"
-}
-
 dependencies {
     detektPlugins(libs.detekt)
     ksp(libs.hilt.android.compiler)
@@ -149,6 +143,33 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.androidx.ui.tooling)
     testImplementation(libs.coroutines.test)
+}
+
+dokka {
+    dokkaSourceSets.main {
+        jdkVersion.set(java.targetCompatibility.toString().toInt()) // Used for linking to JDK documentation
+        skipDeprecated.set(false)
+    }
+
+    pluginsConfiguration.html {
+        dokkaSourceSets {
+            configureEach {
+                documentedVisibilities.set(
+                    setOf(
+                        VisibilityModifier.Public,
+                        VisibilityModifier.Private,
+                        VisibilityModifier.Protected,
+                        VisibilityModifier.Internal,
+                        VisibilityModifier.Package,
+                    )
+                )
+            }
+        }
+    }
+}
+
+hilt {
+    enableAggregatingTask = false
 }
 
 detekt {
@@ -270,13 +291,13 @@ tasks.register<JacocoReport>("jacocoTestReport") {
 
     classDirectories.setFrom(
         files(
-        fileTree("${layout.buildDirectory.get()}/intermediates/javac/debug") {
-            exclude(fileFilter)
-        },
-        fileTree("${layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
-            exclude(fileFilter)
-        }
-    ))
+            fileTree("${layout.buildDirectory.get()}/intermediates/javac/debug") {
+                exclude(fileFilter)
+            },
+            fileTree("${layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
+                exclude(fileFilter)
+            }
+        ))
 
     executionData.setFrom(
         files(
@@ -310,7 +331,7 @@ tasks.register<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
         rule {
             enabled = true
             element = "CLASS"
-            includes = listOf("pl.rk.*")
+            includes = listOf("rk.powermilk.*")
             limit {
                 counter = "LINE"
                 value = "COVEREDRATIO"
@@ -332,39 +353,4 @@ tasks.register("cleanReports") {
     doLast {
         delete("${layout.buildDirectory.get()}/reports")
     }
-}
-
-dokka {
-    dokkaSourceSets.main {
-        jdkVersion.set(javaVersion.toString().toInt()) // Used for linking to JDK documentation
-        skipDeprecated.set(false)
-    }
-
-    pluginsConfiguration.html {
-        dokkaSourceSets {
-            configureEach {
-                documentedVisibilities.set(
-                    setOf(
-                        VisibilityModifier.Public,
-                        VisibilityModifier.Private,
-                        VisibilityModifier.Protected,
-                        VisibilityModifier.Internal,
-                        VisibilityModifier.Package,
-                    )
-                )
-            }
-        }
-    }
-}
-
-hilt {
-    enableAggregatingTask = false
-}
-
-testlogger {
-    showStackTraces = false
-    showFullStackTraces = false
-    showCauses = false
-    slowThreshold = 10000
-    showSimpleNames = true
 }

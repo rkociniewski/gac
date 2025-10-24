@@ -1,6 +1,6 @@
 # 🎲 Gospel A Caso – Randomizer for Gospel passage
 
-[![version](https://img.shields.io/badge/version-1.4.8-yellow.svg)](https://semver.org)
+[![version](https://img.shields.io/badge/version-1.4.9-yellow.svg)](https://semver.org)
 [![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin)
 [![Build](https://github.com/rkociniewski/gac/actions/workflows/main.yml/badge.svg)](https://github.com/rkociniewski/gac/actions/workflows/main.yml)
 [![CodeQL](https://github.com/rkociniewski/gac/actions/workflows/codeql.yml/badge.svg)](https://github.com/rkociniewski/gac/actions/workflows/codeql.yml)
@@ -75,7 +75,7 @@ by spiritual reflection, randomness, and simplicity.
 ## 🗂 Project Structure
 
 ```
-📦pl.rk.gac
+📦rk.powermilk.gac
  ┣ 📁data           # Data loading utilities (prayer text loader)
  ┣ 📁enums          # App-specific enums (language, draw mode, etc.)
  ┣ 📁model          # Data models (Pericope, Settings)
