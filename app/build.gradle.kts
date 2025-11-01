@@ -56,10 +56,10 @@ android {
         applicationId = "rk.powermilk.gac"
         minSdk = 31
         targetSdk = 36
-        versionCode = 23
-        versionName = "1.4.9"
+        versionCode = 24
+        versionName = "1.5.0"
         buildToolsVersion = "36.0.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "rk.powermilk.rosario.HiltTestRunner"
     }
 
     buildTypes {
@@ -81,11 +81,17 @@ android {
         unitTests {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
+            all {
+                it.useJUnitPlatform()
+            }
         }
     }
 
     kotlin {
         jvmToolchain(21)
+        compilerOptions {
+            freeCompilerArgs.add("-XXLanguage:+MultiDollarInterpolation")
+        }
     }
 
     compileOptions {
@@ -133,7 +139,9 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.kotlinx.serialization.json)
     implementation(platform(libs.androidx.compose.bom))
-    testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.ui.test.junit4)
@@ -142,9 +150,16 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.mockk.agent)
     testImplementation(libs.mockk.android)
+    testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.turbine)
+    testImplementation(libs.hilt.android.testing)
+    kspTest(libs.hilt.android.compiler)
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.android.compiler)
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.androidx.ui.tooling)
     testImplementation(libs.coroutines.test)
+    testImplementation(libs.kotlin.test)
 }
 
 dokka {
