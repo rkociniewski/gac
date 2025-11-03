@@ -6,16 +6,13 @@ on:
       api_level:
         description: 'Android API level to test'
         required: false
-        default: '33'
+        default: '31'
         type: choice
         options:
-          - '28'
-          - '30'
-          - '33'
-          - '34'
+          - '36'
   schedule:
     -
-      cron: '0 2 * * 1' # Run at 2 AM every Monday
+      cron: '0 0 * * 1' # Run at 2 AM every Monday
 
 jobs:
   ui-tests:
@@ -25,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api-level: [ 28, 33, 34 ]
+        api-level: [ 31, 36 ]
         target: [ google_apis ]
         arch: [ x86_64 ]
 
