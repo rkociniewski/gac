@@ -1,6 +1,6 @@
-# Contributing to Rosario
+# Contributing to Gospel A Caso
 
-Thank you for your interest in contributing to Rosario! 🙏
+Thank you for your interest in contributing to Gospel A Caso! 🙏
 
 ## 📋 Table of Contents
 
@@ -31,8 +31,8 @@ constructive in all interactions.
 1. **Fork and Clone**
    ```bash
    # Fork the repo on GitHub, then:
-   git clone https://github.com/YOUR_USERNAME/rosario.git
-   cd rosario
+   git clone https://github.com/rkociniewski/gac.git
+   cd gac
    ```
 
 2. **Install Git Hooks**
@@ -448,8 +448,8 @@ Screenshots, mockups, etc.
 
 ## ❓ Questions?
 
-- Open a [Discussion](https://github.com/rkociniewski/rosario/discussions)
-- Check existing [Issues](https://github.com/rkociniewski/rosario/issues)
+- Open a [Discussion](https://github.com/rkociniewski/gac/discussions)
+- Check existing [Issues](https://github.com/rkociniewski/gac/issues)
 - Read the [Documentation](docs/)
 
 ## 🙏 Thank You!

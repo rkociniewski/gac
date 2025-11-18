@@ -56,10 +56,10 @@ android {
         applicationId = "rk.powermilk.gac"
         minSdk = 31
         targetSdk = 36
-        versionCode = 24
-        versionName = "1.5.0"
+        versionCode = 25
+        versionName = "1.5.1"
         buildToolsVersion = "36.0.0"
-        testInstrumentationRunner = "rk.powermilk.rosario.HiltTestRunner"
+        testInstrumentationRunner = "rk.powermilk.gac.HiltTestRunner"
     }
 
     buildTypes {
