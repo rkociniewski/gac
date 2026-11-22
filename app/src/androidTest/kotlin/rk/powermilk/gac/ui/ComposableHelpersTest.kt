@@ -29,7 +29,7 @@ class ComposableHelpersTest {
     fun rememberLocalizedContext_withPolishLanguage() {
         composeTestRule.setContent {
             GospelACasoTheme {
-                val localizedContext = rememberLocalizedContext(Language.PL)
+                val localizedContext = rememberLocalizedContext(Language.PL.name.lowercase())
                 // Context should be localized to Polish
                 assert(localizedContext != null)
             }
@@ -42,7 +42,7 @@ class ComposableHelpersTest {
     fun rememberLocalizedContext_withEnglishLanguage() {
         composeTestRule.setContent {
             GospelACasoTheme {
-                val localizedContext = rememberLocalizedContext(Language.EN)
+                val localizedContext = rememberLocalizedContext(Language.EN.name.lowercase())
                 // Context should be localized to English
                 assert(localizedContext != null)
             }
@@ -55,8 +55,8 @@ class ComposableHelpersTest {
     fun rememberLocalizedContext_switchingLanguages() {
         composeTestRule.setContent {
             GospelACasoTheme {
-                val plContext = rememberLocalizedContext(Language.PL)
-                val enContext = rememberLocalizedContext(Language.EN)
+                val plContext = rememberLocalizedContext(Language.PL.name.lowercase())
+                val enContext = rememberLocalizedContext(Language.EN.name.lowercase())
 
                 // Both contexts should be created
                 assert(plContext != null)
@@ -160,7 +160,7 @@ class ComposableHelpersTest {
             // Each language should have a gospel resource file
             val resourceExists = try {
                 context.resources.openRawResource(language.resource).use { it.available() > 0 }
-            } catch (e: Exception) {
+            } catch (ignored: Exception) {
                 false
             }
 
