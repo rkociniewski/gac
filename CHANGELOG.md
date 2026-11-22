@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-11-23
+
+### CHANGED
+
+- Upgraded Gradle to 9.9.2, Android Gradle Plugin to 9.5.2 and Kotlin to 2.4.21 (KSP 2.3.14)
+- Switched Java toolchain to JDK 27 (bytecode target 26)
+- Raised minSdk to 36 (Android 16), targetSdk to 37 and compileSdk to 37.2
+- Upgraded dependencies: Compose BOM 2026.11.01, Hilt 2.60.1, AndroidX Lifecycle 2.11.1, Coroutines 1.11.0, Serialization 1.13.0, Dokka 2.3.0, MockK 1.14.12, JUnit 6.1.3
+- Migrated to AGP built-in Kotlin support (removed `kotlin-android` plugin)
+- Migrated detekt to 2.0.0-alpha.6 and regenerated `detekt.yml`
+- Upgraded JaCoCo to 0.8.16 and updated coverage class directories
+- Switched CI workflows to JDK 27
+
+### FIXED
+
+- Fixed compilation errors and detekt findings in instrumented tests
+
+### REMOVED
+
+- Deleted Qodana workflow and configuration
+
 ## [1.5.1] - 2025-11-18
 
 ### UPDATED

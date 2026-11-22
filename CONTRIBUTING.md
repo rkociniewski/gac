@@ -22,7 +22,7 @@ constructive in all interactions.
 ### Prerequisites
 
 - Android Studio Hedgehog or later
-- JDK 21
+- JDK 27
 - Git
 - Basic knowledge of Kotlin and Jetpack Compose
 
