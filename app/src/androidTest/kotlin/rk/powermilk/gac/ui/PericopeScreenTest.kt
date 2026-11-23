@@ -6,7 +6,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
 import org.junit.Rule
@@ -44,7 +43,6 @@ class PericopeScreenTest {
     fun setup() {
         settingsRepository = mockk(relaxed = true)
         val settingsFlow = MutableStateFlow(Settings())
-        val errorFlow = MutableSharedFlow<String>()
 
         every { settingsRepository.settingsFlow } returns settingsFlow
         every { settingsRepository.loadPericopesFromRaw(any()) } returns testPericopes

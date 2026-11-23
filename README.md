@@ -1,6 +1,6 @@
 # 🎲 Gospel A Caso – Randomizer for Gospel passage
 
-[![version](https://img.shields.io/badge/version-1.5.1-yellow.svg)](https://semver.org)
+[![version](https://img.shields.io/badge/version-1.6.0-yellow.svg)](https://semver.org)
 [![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin)
 [![Build](https://github.com/rkociniewski/gac/actions/workflows/main.yml/badge.svg)](https://github.com/rkociniewski/gac/actions/workflows/main.yml)
 [![CodeQL](https://github.com/rkociniewski/gac/actions/workflows/codeql.yml/badge.svg)](https://github.com/rkociniewski/gac/actions/workflows/codeql.yml)
@@ -42,9 +42,10 @@ by spiritual reflection, randomness, and simplicity.
 ### Requirements
 
 * Android Studio Hedgehog or later
-* Android 8.0+ (API 26+)
-* Kotlin 2.2.20
-* Gradle 9.10
+* Android 16+ (API 36+)
+* Kotlin 2.4.21
+* Gradle 9.9.2
+* JDK 27
 
 ### Installation
 
@@ -111,7 +112,7 @@ For security issues, please see [SECURITY.md](docs/SECURITY.md)
 * **Build & Test** - Runs on every push and PR
 * **CodeQL Security Scan** - Weekly security analysis (Mondays 2 AM)
 * **Dependabot** - Weekly dependency updates (Mondays 9 AM)
-* **UI Tests** - Automated on device emulators (API 28, 33, 34)
+* **UI Tests** - Automated on device emulators (API 36, 37)
 * **Release** - Automatic version tagging and GitHub releases
 
 ### Git Workflow
